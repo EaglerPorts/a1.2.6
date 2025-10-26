@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 
 public class WorldChunkManager {
 	private NoiseGeneratorOctaves2 field_4194_e;

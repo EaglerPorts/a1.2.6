@@ -49,7 +49,7 @@ public class ResourceLoader {
 	}
 	
 	static {
-		resources.add(new Resource("newsound/", "ogg", sounds));
-		resources.add(new Resource("newmusic/", "ogg", music));
+		resources.add(new Resource("sound/", "ogg", sounds));
+		resources.add(new Resource("music/", "ogg", music));
 	}
 }

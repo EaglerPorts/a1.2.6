@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 
 public abstract class BlockFluids extends Block {
 	protected BlockFluids(int var1, Material var2) {

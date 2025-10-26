@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 
 public class TexturePortalFX extends TextureFX {
 	private int field_4227_g = 0;

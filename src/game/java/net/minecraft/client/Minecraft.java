@@ -1008,20 +1008,6 @@ public class Minecraft implements Runnable {
 	}
 
 	public void installResource(String var1, VFile2 var2) {
-		int var3 = var1.indexOf("/");
-		String var4 = var1.substring(0, var3);
-		var1 = var1.substring(var3 + 1);
-		if(var4.equalsIgnoreCase("sound")) {
-			this.sndManager.func_6372_a(var1, var2);
-		} else if(var4.equalsIgnoreCase("newsound")) {
-			this.sndManager.func_6372_a(var1, var2);
-		} else if(var4.equalsIgnoreCase("streaming")) {
-			this.sndManager.addStreaming(var1, var2);
-		} else if(var4.equalsIgnoreCase("music")) {
-			this.sndManager.addMusic(var1, var2);
-		} else if(var4.equalsIgnoreCase("newmusic")) {
-			this.sndManager.addMusic(var1, var2);
-		}
 
 	}
 

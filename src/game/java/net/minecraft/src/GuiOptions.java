@@ -20,7 +20,7 @@ public class GuiOptions extends GuiScreen {
 				b = new GuiSlider(var1, this.width / 2 - 155 + var1 % 2 * 160, this.height / 6 + 24 * (var1 >> 1), var1, this.options.getOptionDisplayString(var1), this.options.getOptionFloatValue(var1));
 			}
 			this.controlList.add(b);
-			if (var1 == 0 || var1 == 1) b.enabled = false;
+			if (var1 == 0) b.enabled = false;
 		}
 
 		this.controlList.add(new GuiButton(100, this.width / 2 - 100, this.height / 6 + 120 + 12, "Controls..."));

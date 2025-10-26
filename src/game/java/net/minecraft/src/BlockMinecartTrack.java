@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 
 public class BlockMinecartTrack extends Block {
 	protected BlockMinecartTrack(int var1, int var2) {

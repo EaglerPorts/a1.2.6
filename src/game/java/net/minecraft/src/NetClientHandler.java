@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler {

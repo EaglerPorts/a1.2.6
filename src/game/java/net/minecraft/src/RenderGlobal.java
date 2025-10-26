@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 
 import net.lax1dude.eaglercraft.internal.buffer.IntBuffer;
 import net.minecraft.client.Minecraft;

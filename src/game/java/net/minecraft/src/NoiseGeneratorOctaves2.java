@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import net.lax1dude.eaglercraft.Random;
 
 public class NoiseGeneratorOctaves2 extends NoiseGenerator {
 	private NoiseGenerator2[] field_4234_a;
