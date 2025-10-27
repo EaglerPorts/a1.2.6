@@ -388,13 +388,13 @@ public class Minecraft implements Runnable {
 						this.field_9243_r.func_4136_b(this.timer.renderPartialTicks);
 					}
 
-					if(!Display.isActive()) {
+					/* if(!Display.isActive()) {
 						if(this.a) {
 							this.toggleFullscreen();
 						}
 
 						EagUtils.sleep(10L);
-					}
+					} */
 
 					if(Keyboard.isKeyDown(Keyboard.KEY_F3)) {
 						this.func_6238_a(var20);
@@ -741,7 +741,7 @@ public class Minecraft implements Runnable {
 											if(this.currentScreen != null) {
 												this.currentScreen.handleKeyboardInput();
 											} else {
-												if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+												if(Keyboard.getEventKey() == Keyboard.KEY_ESCAPE || Keyboard.getEventKey() == Keyboard.KEY_GRAVE) {
 													this.func_6252_g();
 												}
 

@@ -16,29 +16,29 @@ import net.peyton.eagler.minecraft.AudioUtils;
 public class SoundManager {
 	private GameSettings options;
 	private Random rand = new Random();
-	private int field_583_i = this.rand.nextInt(12000);
-	
+	private int field_583_i = rand.nextInt(12000);
+
 	private Map<String, IAudioResource> sounds = new HashMap<String, IAudioResource>();
 	private Map<String, IAudioResource> music = new HashMap<String, IAudioResource>();
-	
+
 	private IAudioHandle musicHandle;
-	
-	private String[] newMusic = new String[]{"hal1.ogg", "hal2.ogg", "hal3.ogg", "hal4.ogg", "nuance1.ogg", "nuance2.ogg", "piano1.ogg", "piano2.ogg", "piano3.ogg"};
+
+	private String[] newMusic = new String[] {
+			"hal1.ogg", "hal2.ogg", "hal3.ogg", "hal4.ogg",
+			"nuance1.ogg", "nuance2.ogg",
+			"piano1.ogg", "piano2.ogg", "piano3.ogg"
+	};
 
 	public void func_340_a(GameSettings var1) {
-		this.options = var1;
+		options = var1;
 	}
 
 	public void onSoundOptionsChanged() {
-		if(this.options.musicVolume == 0.0F) {
-			if(this.musicHandle != null && !this.musicHandle.shouldFree()) {
+		if (options.musicVolume == 0.0F)
+			if (musicHandle != null && !musicHandle.shouldFree())
 				musicHandle.end();
-			}
-		} else {
-			if(this.musicHandle != null && !this.musicHandle.shouldFree()) {
-				musicHandle.gain(this.options.musicVolume);
-			}
-		}
+			else if (musicHandle != null && !musicHandle.shouldFree())
+				musicHandle.gain(options.musicVolume);
 	}
 
 	public void closeMinecraft() {
@@ -46,33 +46,32 @@ public class SoundManager {
 	}
 
 	public void func_4033_c() {
-		if(this.options.musicVolume != 0.0F) {
-			if(this.musicHandle == null || this.musicHandle.shouldFree()) {
-				if(this.field_583_i > 0) {
-					--this.field_583_i;
-					return;
-				}
+		if (options.musicVolume == 0.0F)
+			return;
 
-				int var1 = rand.nextInt(newMusic.length);
-				this.field_583_i = this.rand.nextInt(12000) + 12000;
-				String name = "/music/" + newMusic[var1];
-				
-				IAudioResource trk = this.music.get(name);
-				if (trk == null) {
-					if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
-						trk = PlatformAudio.loadAudioDataNew(name, false, browserResourceLoader);
-					} else {
-						trk = PlatformAudio.loadAudioData(name, false);
-					}
-					if (trk != null) {
-						music.put(name, trk);
-					}
-				}
-				
-				if (trk != null) {
-					musicHandle = PlatformAudio.beginPlaybackStatic(trk, this.options.musicVolume, 1.0f, false);
-				}
+		if (musicHandle == null || musicHandle.shouldFree()) {
+			if (field_583_i > 0) {
+				--field_583_i;
+				return;
 			}
+
+			int i = rand.nextInt(newMusic.length);
+			field_583_i = rand.nextInt(12000) + 12000;
+			String name = "/music/" + newMusic[i];
+
+			IAudioResource trk = music.get(name);
+			if (trk == null) {
+				if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
+					trk = PlatformAudio.loadAudioDataNew(name, false, browserResourceLoader);
+				} else {
+					trk = PlatformAudio.loadAudioData(name, false);
+				}
+				if (trk != null)
+					music.put(name, trk);
+			}
+
+			if (trk != null)
+				musicHandle = PlatformAudio.beginPlaybackStatic(trk, options.musicVolume, 1.0f, false);
 		}
 	}
 
@@ -93,98 +92,53 @@ public class SoundManager {
 	}
 
 	public void func_331_a(String var1, float var2, float var3, float var4, float var5, float var6) {
-		if(this.options.soundVolume != 0.0F) {
-			if(var5 > 0.0F) {
-				IAudioResource trk;
-				if(var1 == null) return;
-				
-				String sound = AudioUtils.getSound(var1);
-				if(sound == null) {
-					return;
-				}
-				trk = this.sounds.get(sound);
-				if (trk == null) {
-					if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
-						trk = PlatformAudio.loadAudioDataNew(sound, true, browserResourceLoader);
-					} else {
-						trk = PlatformAudio.loadAudioData(sound, true);
-					}
-					if (trk != null) {
-						sounds.put(sound, trk);
-					}
-				}
-				
-				if(trk != null) {
-					PlatformAudio.beginPlayback(trk, var2, var3, var4, var5 * this.options.soundVolume, var6, false);
-				}
-			}
-		}
+
 	}
 
 	public void func_336_b(String var1, float var2, float var3, float var4, float var5, float var6) {
-		if(this.options.soundVolume != 0.0F) {
-			
-			if(var2 > 1.0F) {
-				var2 = 1.0F;
+		if (options.soundVolume == 0.0F)
+			return;
+		if (var5 <= 0.0F)
+			return;
+
+		String sound = AudioUtils.getSound(var1);
+		IAudioResource trk = sounds.get(sound);
+		if (trk == null) {
+			if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
+				trk = PlatformAudio.loadAudioDataNew(sound, true, browserResourceLoader);
+			} else {
+				trk = PlatformAudio.loadAudioData(sound, true);
 			}
-			var2 *= 0.25F;
-			
-			IAudioResource trk;
-			if(var1 == null) return;
-			
-			String sound = AudioUtils.getSound(var1);
-			if(sound == null) {
-				return;
-			}
-			trk = this.sounds.get(sound);
-			if (trk == null) {
-				if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
-					trk = PlatformAudio.loadAudioDataNew(sound, true, browserResourceLoader);
-				} else {
-					trk = PlatformAudio.loadAudioData(sound, true);
-				}
-				if (trk != null) {
-					sounds.put(sound, trk);
-				}
-			}
-			
-			if(trk != null) {
-				PlatformAudio.beginPlaybackStatic(trk, var2 * this.options.soundVolume, var3, false);
-			}
+			if (trk != null)
+				sounds.put(sound, trk);
 		}
+
+		if (trk != null)
+			PlatformAudio.beginPlayback(trk, var2, var3, var4, var5 * options.soundVolume, var6, false);
 	}
 
 	public void func_337_a(String var1, float var2, float var3) {
-		if(this.options.soundVolume != 0.0F) {
-			
-			if(var2 > 1.0F) {
-				var2 = 1.0F;
+		if (options.soundVolume == 0.0F)
+			return;
+
+		if (var2 > 1.0F)
+			var2 = 1.0F;
+		var2 *= 0.25F;
+
+		String sound = AudioUtils.getSound(var1);
+		IAudioResource trk = sounds.get(sound);
+		if (trk == null) {
+			if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
+				trk = PlatformAudio.loadAudioDataNew(sound, true, browserResourceLoader);
+			} else {
+				trk = PlatformAudio.loadAudioData(sound, true);
 			}
-			var2 *= 0.25F;
-			
-			IAudioResource trk;
-			if(var1 == null) return;
-			
-			String sound = AudioUtils.getSound(var1);
-			if(sound == null) {
-				return;
-			}
-			trk = this.sounds.get(sound);
-			if (trk == null) {
-				if (EagRuntime.getPlatformType() != EnumPlatformType.DESKTOP) {
-					trk = PlatformAudio.loadAudioDataNew(sound, true, browserResourceLoader);
-				} else {
-					trk = PlatformAudio.loadAudioData(sound, true);
-				}
-				if (trk != null) {
-					sounds.put(sound, trk);
-				}
-			}
-			
-			if(trk != null) {
-				PlatformAudio.beginPlaybackStatic(trk, var2 * this.options.soundVolume, var3, false);
-			}
+			if (trk != null)
+				sounds.put(sound, trk);
 		}
+
+		if (trk != null)
+			PlatformAudio.beginPlaybackStatic(trk, var2 * options.soundVolume, var3, false);
 	}
 
 	private final IAudioCacheLoader browserResourceLoader = filename -> {
