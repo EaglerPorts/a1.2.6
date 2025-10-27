@@ -169,7 +169,9 @@ public class GuiIngame extends Gui {
 			this.drawString(var8, "y: " + this.mc.thePlayer.posY, 2, 72, 14737632);
 			this.drawString(var8, "z: " + this.mc.thePlayer.posZ, 2, 80, 14737632);
 		} else {
-			var8.drawStringWithShadow("Minecraft Alpha v1.2.6", 2, 2, 16777215);
+			if (this.mc.gameSettings.showFramerate) var8.drawStringWithShadow("Minecraft Alpha v1.2.6 (" + this.mc.fps + " fps)", 2, 2, 16777215);
+			else var8.drawStringWithShadow("Minecraft Alpha v1.2.6", 2, 2, 16777215);
+			if (this.mc.gameSettings.showCoords) var8.drawStringWithShadow("x: " + (int) Math.floor(this.mc.thePlayer.posX) + ", y: " + (int) Math.floor(this.mc.thePlayer.posY) + ", z: " + (int) Math.floor(this.mc.thePlayer.posZ), 2, 12, 16777215);
 		}
 
 		if(this.field_9419_j > 0) {

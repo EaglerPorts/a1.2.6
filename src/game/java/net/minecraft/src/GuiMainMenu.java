@@ -96,8 +96,8 @@ public class GuiMainMenu extends GuiScreen {
 		}
 
 		if(var1.id == 2) {
-			this.mc.displayGuiScreen(new GuiScreenInfo(this, new TextLine("Multiplayer has not been added yet.", 0xFFCCCC), new TextLine(""), new TextLine("It will be implemented soon, be patient you eagler!", 0x888888)));
-			// this.mc.displayGuiScreen(new GuiMultiplayer(this));
+			// this.mc.displayGuiScreen(new GuiScreenInfo(this, new TextLine("Multiplayer has not been added yet.", 0xFFCCCC), new TextLine(""), new TextLine("It will be implemented soon, be patient you eagler!", 0x888888)));
+			this.mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 
 		if(var1.id == 3) {

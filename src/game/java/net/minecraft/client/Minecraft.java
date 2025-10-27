@@ -3,6 +3,7 @@ package net.minecraft.client;
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.EagUtils;
 import net.lax1dude.eaglercraft.internal.PlatformApplication;
+import net.lax1dude.eaglercraft.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.Block;
@@ -67,6 +68,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+import dev.colbster937.eaglercraft.utils.StringPrintStream;
+
 public class Minecraft implements Runnable {
 	public PlayerController field_6327_b;
 	private boolean a = false;
@@ -103,12 +106,12 @@ public class Minecraft implements Runnable {
 	public static long[] field_9239_F = new long[512];
 	public static int field_9238_G = 0;
 	private String field_9234_V;
-	private int field_9233_W;
 	private TextureWaterFX field_9232_X = new TextureWaterFX();
 	private TextureLavaFX field_9231_Y = new TextureLavaFX();
 	private static VFile2 minecraftDir = null;
 	public volatile boolean running = true;
 	public String field_6292_I = "";
+	public int fps = 0;
 	boolean field_6291_J = false;
 	long field_6290_K = -1L;
 	public boolean field_6289_L = false;
@@ -137,12 +140,14 @@ public class Minecraft implements Runnable {
 	}
 
 	public void func_4007_a(UnexpectedThrowable var1) {
+		StringPrintStream log = new StringPrintStream();
 		var1.exception.printStackTrace();
+		var1.exception.printStackTrace(log);
+		PlatformRuntime.writeCrashReport(log.toString());
 	}
 
-	public void func_6258_a(String var1, int var2) {
+	public void func_6258_a(String var1) {
 		this.field_9234_V = var1;
-		this.field_9233_W = var2;
 	}
 
 	public void startGame() throws LWJGLException {
@@ -187,7 +192,7 @@ public class Minecraft implements Runnable {
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
 		if(this.field_9234_V != null) {
-			this.displayGuiScreen(new GuiConnecting(this, this.field_9234_V, this.field_9233_W));
+			this.displayGuiScreen(new GuiConnecting(this, this.field_9234_V));
 		} else {
 			this.displayGuiScreen(new GuiMainMenu());
 		}
@@ -414,6 +419,7 @@ public class Minecraft implements Runnable {
 
 					for(this.field_6316_m = !this.isMultiplayerWorld() && this.currentScreen != null && this.currentScreen.doesGuiPauseGame(); System.currentTimeMillis() >= var1 + 1000L; var3 = 0) {
 						this.field_6292_I = var3 + " fps, " + WorldRenderer.field_1762_b + " chunk updates";
+						this.fps = var3;
 						WorldRenderer.field_1762_b = 0;
 						var1 += 1000L;
 					}

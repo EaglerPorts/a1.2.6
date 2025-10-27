@@ -1,19 +1,61 @@
 package net.minecraft.src;
 
+import net.lax1dude.eaglercraft.internal.EnumEaglerConnectionState;
+import net.lax1dude.eaglercraft.internal.IWebSocketClient;
+import net.lax1dude.eaglercraft.internal.PlatformNetworking;
+import net.lax1dude.eaglercraft.socket.AddressResolver;
 import net.minecraft.client.Minecraft;
 
 public class GuiConnecting extends GuiScreen {
 	private NetClientHandler clientHandler;
 	private boolean cancelled = false;
 
-	public GuiConnecting(Minecraft var1, String var2, int var3) {
+	private boolean successful = false;
+	private boolean connected = false;
+	private String currentAddress;
+	private IWebSocketClient webSocket;
+	private int timer = 0;
+
+	public GuiConnecting(Minecraft var1, String var2) {
 		var1.func_6261_a((World)null);
-		// A1.2.6 TODO: (new ThreadConnectToServer(this, var1, var2, var3)).start();
+		this.currentAddress = AddressResolver.resolveURI(var2);
+		this.clientHandler = new NetClientHandler(var1);
 	}
 
 	public void updateScreen() {
-		if(this.clientHandler != null) {
-			this.clientHandler.processReadPackets();
+		++timer;
+		if (timer > 1) {
+			if (this.webSocket == null) {
+				this.webSocket = PlatformNetworking.openWebSocket(this.currentAddress);
+				if (this.webSocket.getState() == EnumEaglerConnectionState.FAILED
+						|| this.webSocket.getState() == EnumEaglerConnectionState.CLOSED) {
+					this.mc.displayGuiScreen(new GuiConnectFailed("Failed to connect to the server", "Could not open websocket to\"" + this.currentAddress + "\"!"));
+				}
+			} else {
+				if (this.webSocket.getState() == EnumEaglerConnectionState.CONNECTED) {
+					if (!this.successful) {
+						this.clientHandler.getNetManager().setWebSocket(this.webSocket);
+						this.clientHandler.addToSendQueue(new Packet2Handshake(this.mc.field_6320_i.inventory));
+						this.successful = true;
+						this.connected = true;
+					} else {
+						this.clientHandler.processReadPackets();
+					}
+				} else if (this.webSocket.getState() == EnumEaglerConnectionState.FAILED) {
+					if (this.webSocket != null) {
+						this.webSocket.close();
+						this.webSocket = null;
+					}
+					this.mc.displayGuiScreen(new GuiConnectFailed("Failed to connect to the server", "Connection Refused!"));
+				}
+			}
+			if (timer > 200 && !this.clientHandler.getNetManager().isOpen()) {
+				if (this.webSocket != null) {
+					this.webSocket.close();
+					this.webSocket = null;
+				}
+				this.mc.displayGuiScreen(new GuiConnectFailed("Failed to connect to the server", "Connection timed out"));
+			}
 		}
 
 	}

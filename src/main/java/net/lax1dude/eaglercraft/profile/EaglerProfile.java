@@ -21,13 +21,15 @@ import java.io.IOException;
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.EaglerInputStream;
 import net.lax1dude.eaglercraft.EaglerOutputStream;
+import net.lax1dude.eaglercraft.HString;
+import net.lax1dude.eaglercraft.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.CompressedStreamTools;
 import net.minecraft.src.NBTTagCompound;
 
 public class EaglerProfile {
 
-	private static String username;
+	private static String username = getDefaultUsername();
 	
 	public static String getName() {
 		return username;
@@ -89,6 +91,23 @@ public class EaglerProfile {
 
 	static {
 		read();
+	}
+
+	public static String getDefaultUsername() {
+		String[] defaultNames = new String[] {
+			"Yeeish", "Yeeish", "Yee", "Yee", "Yeer", "Yeeler", "Eagler", "Eagl",
+			"Darver", "Darvler", "Vool", "Vigg", "Vigg", "Deev", "Yigg", "Yeeg"
+		};
+		
+		Random rand = new Random();
+
+		String name;
+
+		do {
+			name = HString.format("%s%s%04d", defaultNames[rand.nextInt(defaultNames.length)], defaultNames[rand.nextInt(defaultNames.length)], rand.nextInt(10000));
+		} while (name.length() > 16);
+
+		return name;
 	}
 
 	public static boolean isDefaultUsername(String str) {

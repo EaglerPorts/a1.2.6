@@ -14,10 +14,6 @@ public class EntityOtherPlayerMP extends EntityPlayer {
 		this.field_771_i = var2;
 		this.yOffset = 0.0F;
 		this.field_9286_aZ = 0.0F;
-		if(var2 != null && var2.length() > 0) {
-			this.skinUrl = "http://www.minecraft.net/skin/" + var2 + ".png";
-			System.out.println("Loading texture " + this.skinUrl);
-		}
 
 		this.field_9314_ba = true;
 		this.field_619_ac = 10.0D;

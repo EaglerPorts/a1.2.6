@@ -1,9 +1,10 @@
 package net.minecraft.src;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+
+import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 
 public class WorldClient extends World {
 	private LinkedList field_1057_z = new LinkedList();
@@ -64,7 +65,7 @@ public class WorldClient extends World {
 
 	}
 
-	protected IChunkProvider func_4081_a(File var1) {
+	protected IChunkProvider func_4081_a(VFile2 var1) {
 		this.C = new ChunkProviderClient(this);
 		return this.C;
 	}

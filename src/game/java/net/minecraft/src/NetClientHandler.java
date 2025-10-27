@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import net.lax1dude.eaglercraft.Random;
+import java.util.Random;
 import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler {
@@ -19,14 +19,18 @@ public class NetClientHandler extends NetHandler {
 	private boolean field_1210_g = false;
 	Random rand = new Random();
 
-	public NetClientHandler(Minecraft var1, String var2, int var3) throws IOException, UnknownHostException {
+	public NetClientHandler(Minecraft var1) {
 		this.mc = var1;
-		Socket var4 = new Socket(InetAddress.getByName(var2), var3);
-		this.netManager = new NetworkManager(var4, "Client", this);
+		this.netManager = new NetworkManager(this);
+	}
+
+	public NetworkManager getNetManager() {
+		return this.netManager;
 	}
 
 	public void processReadPackets() {
 		if(!this.disconnected) {
+			this.netManager.readPacket();
 			this.netManager.processReadPackets();
 		}
 	}
@@ -318,25 +322,7 @@ public class NetClientHandler extends NetHandler {
 	}
 
 	public void handleHandshake(Packet2Handshake var1) {
-		if(var1.username.equals("-")) {
-			this.addToSendQueue(new Packet1Login(this.mc.field_6320_i.inventory, "Password", 6));
-		} else {
-			try {
-				URL var2 = new URL("http://www.minecraft.net/game/joinserver.jsp?user=" + this.mc.field_6320_i.inventory + "&sessionId=" + this.mc.field_6320_i.field_6543_c + "&serverId=" + var1.username);
-				BufferedReader var3 = new BufferedReader(new InputStreamReader(var2.openStream()));
-				String var4 = var3.readLine();
-				var3.close();
-				if(var4.equalsIgnoreCase("ok")) {
-					this.addToSendQueue(new Packet1Login(this.mc.field_6320_i.inventory, "Password", 6));
-				} else {
-					this.netManager.networkShutdown("Failed to login: " + var4);
-				}
-			} catch (Exception var5) {
-				var5.printStackTrace();
-				this.netManager.networkShutdown("Internal client error: " + var5.toString());
-			}
-		}
-
+		this.addToSendQueue(new Packet1Login(this.mc.field_6320_i.inventory, "Password", 6));
 	}
 
 	public void disconnect() {

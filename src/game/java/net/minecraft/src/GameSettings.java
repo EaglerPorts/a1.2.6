@@ -35,10 +35,13 @@ public class GameSettings {
 	public KeyBinding[] keyBindings = new KeyBinding[]{this.keyBindForward, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindZoom};
 	protected Minecraft mc;
 	private VFile2 optionsFile;
-	public int numberOfOptions = 10;
+	public int numberOfOptions = 12;
 	public int difficulty = 2;
 	public boolean thirdPersonView = false;
 	public String field_12259_z = "";
+
+	public boolean showFramerate = true;
+	public boolean showCoords = true;
 
 	public GameSettings(Minecraft var1, VFile2 var2) {
 		this.mc = var1;
@@ -103,6 +106,14 @@ public class GameSettings {
 			this.mc.field_6323_f.func_958_a();
 		}
 
+		if(var1 == 10) {
+			this.showFramerate = !this.showFramerate;
+		}
+
+		if(var1 == 11) {
+			this.showCoords = !this.showCoords;
+		}
+
 		this.saveOptions();
 	}
 
@@ -115,7 +126,7 @@ public class GameSettings {
 	}
 
 	public String getOptionDisplayString(int var1) {
-		return var1 == 0 ? "Music: " + (this.musicVolume > 0.0F ? (int)(this.musicVolume * 100.0F) + "%" : "OFF") : (var1 == 1 ? "Sound: " + (this.soundVolume > 0.0F ? (int)(this.soundVolume * 100.0F) + "%" : "OFF") : (var1 == 2 ? "Invert mouse: " + (this.invertMouse ? "ON" : "OFF") : (var1 == 3 ? (this.mouseSensitivity == 0.0F ? "Sensitivity: *yawn*" : (this.mouseSensitivity == 1.0F ? "Sensitivity: HYPERSPEED!!!" : "Sensitivity: " + (int)(this.mouseSensitivity * 200.0F) + "%")) : (var1 == 4 ? "Render distance: " + RENDER_DISTANCES[this.renderDistance] : (var1 == 5 ? "View bobbing: " + (this.viewBobbing ? "ON" : "OFF") : (var1 == 6 ? "3d anaglyph: " + (this.anaglyph ? "ON" : "OFF") : (var1 == 7 ? "Limit framerate: " + (this.limitFramerate ? "ON" : "OFF") : (var1 == 8 ? "Difficulty: " + DIFFICULTY_LEVELS[this.difficulty] : (var1 == 9 ? "Graphics: " + (this.fancyGraphics ? "FANCY" : "FAST") : "")))))))));
+		return var1 == 0 ? "Music: " + (this.musicVolume > 0.0F ? (int)(this.musicVolume * 100.0F) + "%" : "OFF") : (var1 == 1 ? "Sound: " + (this.soundVolume > 0.0F ? (int)(this.soundVolume * 100.0F) + "%" : "OFF") : (var1 == 2 ? "Invert mouse: " + (this.invertMouse ? "ON" : "OFF") : (var1 == 3 ? (this.mouseSensitivity == 0.0F ? "Sensitivity: *yawn*" : (this.mouseSensitivity == 1.0F ? "Sensitivity: HYPERSPEED!!!" : "Sensitivity: " + (int)(this.mouseSensitivity * 200.0F) + "%")) : (var1 == 4 ? "Render distance: " + RENDER_DISTANCES[this.renderDistance] : (var1 == 5 ? "View bobbing: " + (this.viewBobbing ? "ON" : "OFF") : (var1 == 6 ? "3d anaglyph: " + (this.anaglyph ? "ON" : "OFF") : (var1 == 7 ? "Limit framerate: " + (this.limitFramerate ? "ON" : "OFF") : (var1 == 8 ? "Difficulty: " + DIFFICULTY_LEVELS[this.difficulty] : (var1 == 9 ? "Graphics: " + (this.fancyGraphics ? "FANCY" : "FAST") : (var1 == 10 ? "Show FPS: " + (this.showFramerate ? "ON" : "OFF") : (var1 == 11 ? "Show Coordinates: " + (this.showCoords ? "ON" : "OFF") : "")))))))))));
 	}
 
 	public void loadOptions() {
@@ -179,9 +190,17 @@ public class GameSettings {
 					this.skin = var3[1];
 				}
 
-				/* A1.2.6 TODO: if(var3[0].equals("lastServer")) {
+				if(var3[0].equals("lastServer")) {
 					this.field_12259_z = var3[1];
-				} */
+				}
+
+				if(var3[0].equals("showFramerate")) {
+					this.showFramerate = Boolean.parseBoolean(var3[1]);
+				}
+
+				if(var3[0].equals("showCoords")) {
+					this.showCoords = Boolean.parseBoolean(var3[1]);
+				}
 
 				for(int var4 = 0; var4 < this.keyBindings.length; ++var4) {
 					if(var3[0].equals("key_" + this.keyBindings[var4].keyDescription)) {
@@ -214,7 +233,9 @@ public class GameSettings {
 			var1.println("difficulty:" + this.difficulty);
 			var1.println("fancyGraphics:" + this.fancyGraphics);
 			var1.println("skin:" + this.skin);
-			// A1.2.6 TODO: var1.println("lastServer:" + this.field_12259_z);
+			var1.println("lastServer:" + this.field_12259_z);
+			var1.println("showFramerate:" + this.showFramerate);
+			var1.println("showCoords:" + this.showCoords);
 
 			for(int var2 = 0; var2 < this.keyBindings.length; ++var2) {
 				var1.println("key_" + this.keyBindings[var2].keyDescription + ":" + this.keyBindings[var2].keyCode);
