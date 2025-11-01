@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import dev.colbster937.eaglercraft.SingleplayerCommands;
 import net.minecraft.client.Minecraft;
 
 public class EntityPlayerSP extends EntityPlayer {
@@ -120,6 +121,7 @@ public class EntityPlayerSP extends EntityPlayer {
 	}
 
 	public void sendChatMessage(String var1) {
+		SingleplayerCommands.showDummyChat(var1);
 	}
 
 	public void func_6420_o() {

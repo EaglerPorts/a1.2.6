@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import java.util.ArrayList;
+
 public class GuiOptions extends GuiScreen {
 	private GuiScreen parentScreen;
 	protected String screenTitle = "Options";
@@ -11,20 +13,33 @@ public class GuiOptions extends GuiScreen {
 	}
 
 	public void initGui() {
+		int i = 0;
 		for(int var1 = 0; var1 < this.options.numberOfOptions; ++var1) {
 			int var2 = this.options.getOptionControlType(var1);
 			GuiButton b;
+
 			if(var2 == 0) {
-				b = new GuiSmallButton(var1, this.width / 2 - 155 + var1 % 2 * 160, this.height / 6 + 24 * (var1 >> 1), this.options.getOptionDisplayString(var1));
+				b = new GuiSmallButton(var1, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), this.options.getOptionDisplayString(var1));
 			} else {
-				b = new GuiSlider(var1, this.width / 2 - 155 + var1 % 2 * 160, this.height / 6 + 24 * (var1 >> 1), var1, this.options.getOptionDisplayString(var1), this.options.getOptionFloatValue(var1));
+				b = new GuiSlider(var1, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), var1, this.options.getOptionDisplayString(var1), this.options.getOptionFloatValue(var1));
 			}
+
 			this.controlList.add(b);
-			if (var1 == 0) b.enabled = false;
+			
+			++i;
 		}
 
-		this.controlList.add(new GuiButton(100, this.width / 2 - 100, this.height / 6 + 132 + 12, "Controls..."));
+		ArrayList<GuiButton> extraOpts = new ArrayList<>();
+		extraOpts.add(new GuiButton(100, this.width / 2 - 100, this.height / 6 + 132 + 12, "Controls..."));
+		extraOpts.add(new GuiButton(101, 0, 0, "Texture Packs..."));
+
 		this.controlList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, "Done"));
+
+		for (GuiButton extraOpt : extraOpts) {
+			GuiButton opt = new GuiSmallButton(extraOpt.id, this.width / 2 - 155 + i % 2 * 160, this.height / 6 + 24 * (i >> 1), extraOpt.displayString);
+			this.controlList.add(opt);
+			++i;
+		}
 	}
 
 	protected void actionPerformed(GuiButton var1) {
@@ -37,6 +52,11 @@ public class GuiOptions extends GuiScreen {
 			if(var1.id == 100) {
 				this.mc.gameSettings.saveOptions();
 				this.mc.displayGuiScreen(new GuiControls(this, this.options));
+			}
+
+			if(var1.id == 101) {
+				this.mc.gameSettings.saveOptions();
+				this.mc.displayGuiScreen(new GuiTexturePacks(this));
 			}
 
 			if(var1.id == 200) {

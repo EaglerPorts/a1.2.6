@@ -42,14 +42,6 @@ public class GuiMultiplayer extends GuiScreen {
 		}
 	}
 
-	private int func_4067_a(String var1, int var2) {
-		try {
-			return Integer.parseInt(var1.trim());
-		} catch (Exception var4) {
-			return var2;
-		}
-	}
-
 	private void pasteIntoActive(String var1, int var2) {
 		if(var1 == null) var1 = "";
 		String var3 = this.focus == 2 ? this.serverAddress : this.username;
@@ -98,9 +90,9 @@ public class GuiMultiplayer extends GuiScreen {
 
 	public void drawScreen(int var1, int var2, float var3) {
 		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRenderer, "Play Multiplayer", this.width / 2, this.height / 4 - 60 + 20, 16777215);
-		this.drawString(this.fontRenderer, "Alpha Multiplayer is currently not finished, but there", this.width / 2 - 140, this.height / 4 - 60 + 40 + 0, 10526880);
-		this.drawString(this.fontRenderer, "is some buggy early testing going on.", this.width / 2 - 140, this.height / 4 - 60 + 40 + 9, 10526880);
+		this.drawCenteredString(this.fontRenderer, "Play Multiplayer", this.width / 2, this.height / 4 - 60 + 20 + 15, 16777215);
+		// this.drawString(this.fontRenderer, "Alpha Multiplayer is currently not finished, but there", this.width / 2 - 140, this.height / 4 - 60 + 40 + 0, 10526880);
+		// this.drawString(this.fontRenderer, "is some buggy early testing going on.", this.width / 2 - 140, this.height / 4 - 60 + 40 + 9, 10526880);
 
 		this.drawString(this.fontRenderer, "Username:", this.width / 2 - 100, this.height / 4 - 60 + 60 + 6, 10526880);
 		int var4 = this.width / 2 - 100;

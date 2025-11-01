@@ -19,7 +19,7 @@ public class GameSettings {
 	public int renderDistance = 1;
 	public boolean viewBobbing = true;
 	public boolean anaglyph = false;
-	public boolean limitFramerate = false;
+	public boolean vsync = true;
 	public boolean fancyGraphics = false;
 	public String skin = "Default";
 	public KeyBinding keyBindForward = new KeyBinding("Forward", 17);
@@ -31,8 +31,9 @@ public class GameSettings {
 	public KeyBinding keyBindDrop = new KeyBinding("Drop", 16);
 	public KeyBinding keyBindChat = new KeyBinding("Chat", 20);
 	public KeyBinding keyBindSneak = new KeyBinding("Sneak", 42);
-	public KeyBinding keyBindZoom = new KeyBinding("Zoom", 46);
-	public KeyBinding[] keyBindings = new KeyBinding[]{this.keyBindForward, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindZoom};
+	public KeyBinding keyBindCommand = new KeyBinding("Command", Keyboard.KEY_SLASH);
+	public KeyBinding keyBindZoom = new KeyBinding("Zoom", Keyboard.KEY_C);
+	public KeyBinding[] keyBindings = new KeyBinding[]{this.keyBindForward, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindCommand, this.keyBindZoom};
 	protected Minecraft mc;
 	private VFile2 optionsFile;
 	public int numberOfOptions = 12;
@@ -94,7 +95,7 @@ public class GameSettings {
 		}
 
 		if(var1 == 7) {
-			this.limitFramerate = !this.limitFramerate;
+			this.vsync = !this.vsync;
 		}
 
 		if(var1 == 8) {
@@ -126,7 +127,7 @@ public class GameSettings {
 	}
 
 	public String getOptionDisplayString(int var1) {
-		return var1 == 0 ? "Music: " + (this.musicVolume > 0.0F ? (int)(this.musicVolume * 100.0F) + "%" : "OFF") : (var1 == 1 ? "Sound: " + (this.soundVolume > 0.0F ? (int)(this.soundVolume * 100.0F) + "%" : "OFF") : (var1 == 2 ? "Invert mouse: " + (this.invertMouse ? "ON" : "OFF") : (var1 == 3 ? (this.mouseSensitivity == 0.0F ? "Sensitivity: *yawn*" : (this.mouseSensitivity == 1.0F ? "Sensitivity: HYPERSPEED!!!" : "Sensitivity: " + (int)(this.mouseSensitivity * 200.0F) + "%")) : (var1 == 4 ? "Render distance: " + RENDER_DISTANCES[this.renderDistance] : (var1 == 5 ? "View bobbing: " + (this.viewBobbing ? "ON" : "OFF") : (var1 == 6 ? "3d anaglyph: " + (this.anaglyph ? "ON" : "OFF") : (var1 == 7 ? "Limit framerate: " + (this.limitFramerate ? "ON" : "OFF") : (var1 == 8 ? "Difficulty: " + DIFFICULTY_LEVELS[this.difficulty] : (var1 == 9 ? "Graphics: " + (this.fancyGraphics ? "FANCY" : "FAST") : (var1 == 10 ? "Show FPS: " + (this.showFramerate ? "ON" : "OFF") : (var1 == 11 ? "Show Coordinates: " + (this.showCoords ? "ON" : "OFF") : "")))))))))));
+		return var1 == 0 ? "Music: " + (this.musicVolume > 0.0F ? (int)(this.musicVolume * 100.0F) + "%" : "OFF") : (var1 == 1 ? "Sound: " + (this.soundVolume > 0.0F ? (int)(this.soundVolume * 100.0F) + "%" : "OFF") : (var1 == 2 ? "Invert mouse: " + (this.invertMouse ? "ON" : "OFF") : (var1 == 3 ? (this.mouseSensitivity == 0.0F ? "Sensitivity: *yawn*" : (this.mouseSensitivity == 1.0F ? "Sensitivity: HYPERSPEED!!!" : "Sensitivity: " + (int)(this.mouseSensitivity * 200.0F) + "%")) : (var1 == 4 ? "Render distance: " + RENDER_DISTANCES[this.renderDistance] : (var1 == 5 ? "View bobbing: " + (this.viewBobbing ? "ON" : "OFF") : (var1 == 6 ? "3d anaglyph: " + (this.anaglyph ? "ON" : "OFF") : (var1 == 7 ? "Use VSync: " + (this.vsync ? "ON" : "OFF") : (var1 == 8 ? "Difficulty: " + DIFFICULTY_LEVELS[this.difficulty] : (var1 == 9 ? "Graphics: " + (this.fancyGraphics ? "FANCY" : "FAST") : (var1 == 10 ? "Show FPS: " + (this.showFramerate ? "ON" : "OFF") : (var1 == 11 ? "Show Coordinates: " + (this.showCoords ? "ON" : "OFF") : "")))))))))));
 	}
 
 	public void loadOptions() {
@@ -174,8 +175,8 @@ public class GameSettings {
 					this.anaglyph = var3[1].equals("true");
 				}
 
-				if(var3[0].equals("limitFramerate")) {
-					this.limitFramerate = var3[1].equals("true");
+				if(var3[0].equals("vsync")) {
+					this.vsync = var3[1].equals("true");
 				}
 
 				if(var3[0].equals("difficulty")) {
@@ -195,11 +196,11 @@ public class GameSettings {
 				}
 
 				if(var3[0].equals("showFramerate")) {
-					this.showFramerate = Boolean.parseBoolean(var3[1]);
+					this.showFramerate = var3[1].equals("true");
 				}
 
 				if(var3[0].equals("showCoords")) {
-					this.showCoords = Boolean.parseBoolean(var3[1]);
+					this.showCoords = var3[1].equals("true");
 				}
 
 				for(int var4 = 0; var4 < this.keyBindings.length; ++var4) {
@@ -229,7 +230,7 @@ public class GameSettings {
 			var1.println("viewDistance:" + this.renderDistance);
 			var1.println("bobView:" + this.viewBobbing);
 			var1.println("anaglyph3d:" + this.anaglyph);
-			var1.println("limitFramerate:" + this.limitFramerate);
+			var1.println("vsync:" + this.vsync);
 			var1.println("difficulty:" + this.difficulty);
 			var1.println("fancyGraphics:" + this.fancyGraphics);
 			var1.println("skin:" + this.skin);

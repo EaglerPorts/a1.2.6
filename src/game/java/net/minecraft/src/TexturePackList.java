@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ public class TexturePackList {
 	}
 
 	public boolean setTexturePack(TexturePackBase var1) {
+		System.out.println("loading texture pack \"" + var1.texturePackFileName + "\"");
 		if(var1 == this.selectedTexturePack) {
 			return false;
 		} else {
@@ -93,5 +95,18 @@ public class TexturePackList {
 
 	public List availableTexturePacks() {
 		return new ArrayList(this.availableTexturePacks);
+	}
+
+	public void addTexturePack(byte[] data, String name) {
+		try {
+			VFile2 file = new VFile2(texturePackDir, name);
+			OutputStream os = file.getOutputStream();
+			os.write(data);
+			os.close();
+			this.func_6532_a();
+			System.out.println("added texture pack \"" + name + "\"");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

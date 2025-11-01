@@ -2038,4 +2038,8 @@ public class World implements IBlockAccess {
 		}
 
 	}
+
+	public IChunkProvider getIChunkProvider() {
+		return this.chunkProvider;
+	}
 }

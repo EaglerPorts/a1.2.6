@@ -1,8 +1,6 @@
 package net.minecraft.client;
 
 import net.lax1dude.eaglercraft.EagRuntime;
-import net.lax1dude.eaglercraft.EagUtils;
-import net.lax1dude.eaglercraft.internal.PlatformApplication;
 import net.lax1dude.eaglercraft.internal.PlatformRuntime;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 import net.minecraft.src.AxisAlignedBB;
@@ -72,7 +70,6 @@ import dev.colbster937.eaglercraft.utils.StringPrintStream;
 
 public class Minecraft implements Runnable {
 	public PlayerController field_6327_b;
-	private boolean a = false;
 	public int displayWidth;
 	public int displayHeight;
 	private Timer timer = new Timer(20.0F);
@@ -135,7 +132,11 @@ public class Minecraft implements Runnable {
 	}
 
 	public void updateDisplay() {
-		if (Display.isVSyncSupported()) Display.setVSync(true);
+		if (Display.isVSyncSupported()) {
+			if (this.theWorld == null || this.currentScreen != null) Display.setVSync(true);
+			else Display.setVSync(this.gameSettings.vsync);
+		}
+		Display.update();
 		if (Display.wasResized()) this.resize(Display.getWidth(), Display.getHeight());
 	}
 
@@ -151,7 +152,7 @@ public class Minecraft implements Runnable {
 	}
 
 	public void startGame() throws LWJGLException {
-		Display.setTitle("Minecraft Minecraft Alpha v1.2.6");
+		Display.setTitle("Minecraft Alpha v1.2.6");
 
 		RenderManager.instance.field_4236_f = new ItemRenderer(this);
 		this.field_6297_D = getMinecraftDir();
@@ -377,14 +378,6 @@ public class Minecraft implements Runnable {
 						this.theWorld.func_6465_g();
 					}
 
-					if(this.gameSettings.limitFramerate) {
-						EagUtils.sleep(5L);
-					}
-
-					if(!Keyboard.isKeyDown(Keyboard.KEY_F7)) {
-						Display.update();
-					}
-
 					if(!this.field_6307_v) {
 						if(this.field_6327_b != null) {
 							this.field_6327_b.func_6467_a(this.timer.renderPartialTicks);
@@ -393,22 +386,10 @@ public class Minecraft implements Runnable {
 						this.field_9243_r.func_4136_b(this.timer.renderPartialTicks);
 					}
 
-					/* if(!Display.isActive()) {
-						if(this.a) {
-							this.toggleFullscreen();
-						}
-
-						EagUtils.sleep(10L);
-					} */
-
 					if(Keyboard.isKeyDown(Keyboard.KEY_F3)) {
 						this.func_6238_a(var20);
 					} else {
 						this.field_6290_K = System.nanoTime();
-					}
-
-					if(Keyboard.isKeyDown(Keyboard.KEY_F7)) {
-						Display.update();
 					}
 
 					this.func_6248_s();
@@ -767,8 +748,14 @@ public class Minecraft implements Runnable {
 													this.thePlayer.dropPlayerItemWithRandomChoice(this.thePlayer.inventory.decrStackSize(this.thePlayer.inventory.currentItem, 1), false);
 												}
 
-												if(this.isMultiplayerWorld() && Keyboard.getEventKey() == this.gameSettings.keyBindChat.keyCode) {
+												if(Keyboard.getEventKey() == this.gameSettings.keyBindChat.keyCode) {
 													this.displayGuiScreen(new GuiChat());
+												}
+
+
+												if(Keyboard.getEventKey() == this.gameSettings.keyBindCommand.keyCode) {
+													this.displayGuiScreen(new GuiChat());
+													if (this.currentScreen instanceof GuiChat) ((GuiChat) this.currentScreen).setMessage("/");
 												}
 											}
 
@@ -932,7 +919,7 @@ public class Minecraft implements Runnable {
 		}
 
 		this.theWorld = var1;
-		System.out.println("Player is " + this.thePlayer);
+		// System.out.println("Player is " + this.thePlayer);
 		if(var1 != null) {
 			this.field_6327_b.func_717_a(var1);
 			if(!this.isMultiplayerWorld()) {
@@ -950,7 +937,7 @@ public class Minecraft implements Runnable {
 				this.func_6255_d(var2);
 			}
 
-			System.out.println("Player is now " + this.thePlayer);
+			// System.out.println("Player is now " + this.thePlayer);
 			if(this.thePlayer == null) {
 				this.thePlayer = (EntityPlayerSP)this.field_6327_b.func_4087_b(var1);
 				this.thePlayer.preparePlayerToSpawn();

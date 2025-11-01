@@ -1,5 +1,6 @@
 package net.lax1dude.eaglercraft.opengl;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import net.lax1dude.eaglercraft.EagRuntime;
@@ -84,7 +85,13 @@ public class ImageData {
 	}
 
 	public static final ImageData loadImageFile(InputStream data) {
-		return PlatformAssets.loadImageFile(data);
+		try {
+			return PlatformAssets.loadImageFile(data);
+		} finally {
+			try {
+				data.close();
+			} catch (IOException e) {}
+		}
 	}
 
 	public static final ImageData loadImageFile(byte[] data) {
@@ -101,7 +108,13 @@ public class ImageData {
 	}
 
 	public static final ImageData loadImageFile(InputStream data, String mime) {
-		return PlatformAssets.loadImageFile(data, mime);
+		try {
+			return PlatformAssets.loadImageFile(data, mime);
+		} finally {
+			try {
+				data.close();
+			} catch (IOException e) {}
+		}
 	}
 
 	public static final ImageData loadImageFile(byte[] data, String mime) {

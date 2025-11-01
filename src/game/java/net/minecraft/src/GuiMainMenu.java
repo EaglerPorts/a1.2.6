@@ -10,8 +10,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import dev.colbster937.eaglercraft.EaglercraftVersion;
-import dev.colbster937.eaglercraft.gui.GuiScreenInfo;
-import dev.colbster937.eaglercraft.gui.GuiScreenInfo.TextLine;
 import net.lax1dude.eaglercraft.EagRuntime;
 
 public class GuiMainMenu extends GuiScreen {
@@ -76,8 +74,7 @@ public class GuiMainMenu extends GuiScreen {
 
 		this.controlList.add(b = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 48, "Singleplayer"));
 		this.controlList.add(b = new GuiButton(2, this.width / 2 - 100, this.height / 4 + 72, "Multiplayer"));
-		this.controlList.add(b = new GuiButton(3, this.width / 2 - 100, this.height / 4 + 96, "Mods and Texture Packs"));
-		b.enabled = false;
+		this.controlList.add(b = new GuiButton(3, this.width / 2 - 100, this.height / 4 + 96, "Texture Packs"));
 		this.controlList.add(b = new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120 + 12, 98, 20, "Options..."));
 		this.controlList.add(b = new GuiButton(4, this.width / 2 + 2, this.height / 4 + 120 + 12, 98, 20, "Github"));
 		if(this.mc.field_6320_i == null) {

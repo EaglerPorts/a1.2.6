@@ -15,7 +15,7 @@ public class ColorizerFoliage {
 
 	static {
 		try {
-			ImageData var0 = ImageData.loadImageFile(EagRuntime.getResourceStream("/misc/foliagecolor.png"));
+			ImageData var0 = ImageData.loadImageFile(EagRuntime.getResourceStream("/misc/foliagecolor.png")).swapRB();
 			var0.getRGB(0, 0, 256, 256, field_6529_a, 0, 256);
 		} catch (Exception var1) {
 			var1.printStackTrace();

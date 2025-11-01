@@ -4,6 +4,8 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.lax1dude.eaglercraft.EagRuntime;
+import net.lax1dude.eaglercraft.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 
 public class GuiTexturePacks extends GuiScreen {
@@ -35,7 +37,7 @@ public class GuiTexturePacks extends GuiScreen {
 	protected void actionPerformed(GuiButton var1) {
 		if(var1.enabled) {
 			if(var1.id == 5) {
-				// A1.2.6 TODO: Sys.openURL("file://" + this.field_6453_p);
+				EagRuntime.displayFileChooser("application/zip", ".zip");
 			}
 
 			if(var1.id == 6) {
@@ -184,12 +186,16 @@ public class GuiTexturePacks extends GuiScreen {
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glDisable(GL11.GL_BLEND);
 		this.drawCenteredString(this.fontRenderer, "Select Texture Pack", this.width / 2, 16, 16777215);
-		this.drawCenteredString(this.fontRenderer, "(Place texture pack files here)", this.width / 2 - 77, this.height - 26, 8421504);
+		this.drawCenteredString(this.fontRenderer, "(Select texture pack files here)", this.width / 2 - 77, this.height - 26, 8421504);
 		super.drawScreen(var1, var2, var3);
 	}
 
 	public void updateScreen() {
 		super.updateScreen();
+		if (EagRuntime.fileChooserHasResult()) {
+			FileChooserResult result = EagRuntime.getFileChooserResult();
+			this.mc.texturePackList.addTexturePack(result.fileData, result.fileName);
+		}
 		--this.field_6454_o;
 	}
 

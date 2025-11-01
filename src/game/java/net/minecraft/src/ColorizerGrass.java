@@ -15,7 +15,7 @@ public class ColorizerGrass {
 
 	static {
 		try {
-			ImageData var0 = ImageData.loadImageFile(EagRuntime.getResourceStream("/misc/grasscolor.png"));
+			ImageData var0 = ImageData.loadImageFile(EagRuntime.getResourceStream("/misc/grasscolor.png")).swapRB();
 			var0.getRGB(0, 0, 256, 256, field_6540_a, 0, 256);
 		} catch (Exception var1) {
 			var1.printStackTrace();

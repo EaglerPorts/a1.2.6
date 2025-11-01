@@ -10,19 +10,21 @@ public class EntityList {
 	private static Map classToStringMapping = new HashMap();
 	private static Map IDtoClassMapping = new HashMap();
 	private static Map classToIDMapping = new HashMap();
+	private static Map stringToIDMapping = new HashMap();
 
 	private static void addMapping(Class var0, EntitySupplier var1, String var2, int var3) {
-		stringToClassMapping.put(var2, var1);
+		stringToClassMapping.put(var2.toLowerCase(), var1);
 		classToStringMapping.put(var0, var2);
 		IDtoClassMapping.put(Integer.valueOf(var3), var1);
 		classToIDMapping.put(var0, Integer.valueOf(var3));
+		stringToIDMapping.put(var2.toLowerCase(), Integer.valueOf(var3));
 	}
 
 	public static Entity createEntityInWorld(String var0, World var1) {
 		Entity var2 = null;
 
 		try {
-			EntitySupplier var3 = (EntitySupplier)stringToClassMapping.get(var0);
+			EntitySupplier var3 = (EntitySupplier)stringToClassMapping.get(var0.toLowerCase());
 			if(var3 != null) {
 				var2 = (Entity)var3.createEntity(var1);
 			}
@@ -37,7 +39,7 @@ public class EntityList {
 		Entity var2 = null;
 
 		try {
-			EntitySupplier var3 = (EntitySupplier)stringToClassMapping.get(var0.getString("id"));
+			EntitySupplier var3 = (EntitySupplier)stringToClassMapping.get(var0.getString("id").toLowerCase());
 			if(var3 != null) {
 				var2 = (Entity)var3.createEntity(var1);
 			}
@@ -79,6 +81,10 @@ public class EntityList {
 
 	public static String getEntityString(Entity var0) {
 		return (String)classToStringMapping.get(var0.getClass());
+	}
+
+	public static int getEntityID(String var0) {
+		return ((Integer)stringToIDMapping.get(var0.toLowerCase()));
 	}
 
 	static {
