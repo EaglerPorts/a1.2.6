@@ -4,7 +4,6 @@ import org.lwjgl.input.Keyboard;
 
 import dev.colbster937.eaglercraft.SingleplayerCommands;
 import dev.colbster937.eaglercraft.utils.ScuffedUtils;
-import net.lax1dude.eaglercraft.EagRuntime;
 
 public class GuiChat extends GuiScreen {
 	private String message = "";
@@ -24,7 +23,7 @@ public class GuiChat extends GuiScreen {
 	}
 
 	protected void keyTyped(char var1, int var2) {
-		if(var2 == 1 || var2 == Keyboard.KEY_GRAVE) {
+		if(var2 == 1) {
 			this.mc.displayGuiScreen((GuiScreen)null);
 		} else if(var2 == 28) {
 			String var3 = this.message.trim();
@@ -54,6 +53,7 @@ public class GuiChat extends GuiScreen {
 	public void drawScreen(int var1, int var2, float var3) {
 		this.drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
 		this.drawString(this.fontRenderer, "> " + this.message + (this.updateCounter / 6 % 2 == 0 ? "_" : ""), 4, this.height - 12, 14737632);
+		super.drawScreen(var1, var2, var3);
 	}
 
 	protected void mouseClicked(int var1, int var2, int var3) {
@@ -67,8 +67,17 @@ public class GuiChat extends GuiScreen {
 			if(this.message.length() > var4) {
 				this.message = this.message.substring(0, var4);
 			}
+		} else {
+			super.mouseClicked(var1, var2, var3);
 		}
 
+	}
+
+	protected void actionPerformed(GuiButton var1) {
+		if (var1.id == 0) {
+			this.mc.displayGuiScreen(null);
+			this.mc.func_6259_e();
+		}
 	}
 
 	public boolean doesGuiPauseGame() {

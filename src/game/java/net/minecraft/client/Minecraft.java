@@ -386,11 +386,11 @@ public class Minecraft implements Runnable {
 						this.field_9243_r.func_4136_b(this.timer.renderPartialTicks);
 					}
 
-					if(Keyboard.isKeyDown(Keyboard.KEY_F3)) {
-						this.func_6238_a(var20);
-					} else {
+					// if(Keyboard.isKeyDown(Keyboard.KEY_F3)) {
+					// 	this.func_6238_a(var20);
+					// } else {
 						this.field_6290_K = System.nanoTime();
-					}
+					// }
 
 					this.func_6248_s();
 					this.updateDisplay();
