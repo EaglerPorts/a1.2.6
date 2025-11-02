@@ -1,5 +1,5 @@
 @echo off
-title gradlew target_teavm_javascript:assembleMainComponents
 cd ../
+call scripts/wrapper.bat
 call gradlew target_teavm_javascript:assembleMainComponents
 pause

@@ -18,6 +18,8 @@ package net.lax1dude.eaglercraft.internal;
  */
 public interface IClientConfigAdapter {
 
+	String getServerToJoin();
+
 	String getWorldsDB();
 
 	String getResourcePacksDB();

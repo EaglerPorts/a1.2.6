@@ -51,6 +51,8 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 	private boolean keepAliveHack = true;
 	private boolean finishOnSwap = true;
 
+	private String serverToJoin = null;
+
 	public void loadNative(JSObject jsObject) {
 		JSEaglercraftXOptsRoot eaglercraftXOpts = (JSEaglercraftXOptsRoot)jsObject;
 		
@@ -74,10 +76,16 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 		enforceVSync = eaglercraftXOpts.getEnforceVSync(true);
 		keepAliveHack = eaglercraftXOpts.getKeepAliveHack(true);
 		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(true);
+		serverToJoin = eaglercraftXOpts.getJoinServer(null);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
 		}
+	}
+
+	@Override
+	public String getServerToJoin() {
+		return serverToJoin;
 	}
 
 	@Override

@@ -10,8 +10,15 @@ public class GuiMultiplayer extends GuiScreen {
 	private String username = "";
 	private int focus = 0;
 
+	private boolean locked = false;
+
 	public GuiMultiplayer(GuiScreen var1) {
 		this.updateCounter = var1;
+	}
+
+	public GuiMultiplayer(GuiScreen var0, String var1) {
+		this.serverAddress = var1;
+		this.locked = true;
 	}
 
 	public void updateScreen() {
@@ -22,7 +29,7 @@ public class GuiMultiplayer extends GuiScreen {
 		this.controlList.clear();
 		this.controlList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, "Connect"));
 		this.controlList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12, "Cancel"));
-		this.serverAddress = this.mc.gameSettings.field_12259_z.replaceAll("_", ":");
+		if (!this.locked) this.serverAddress = this.mc.gameSettings.field_12259_z.replaceAll("_", ":");
 		this.username = EaglerProfile.getName();
 		((GuiButton)this.controlList.get(0)).enabled = this.serverAddress.length() > 0 && this.username.length() > 0;
 	}
@@ -44,6 +51,7 @@ public class GuiMultiplayer extends GuiScreen {
 
 	private void pasteIntoActive(String var1, int var2) {
 		if(var1 == null) var1 = "";
+		if (this.locked && this.focus == 2) return;
 		String var3 = this.focus == 2 ? this.serverAddress : this.username;
 		int var4 = var2 - var3.length();
 		if(var4 > var1.length()) var4 = var1.length();
@@ -56,7 +64,7 @@ public class GuiMultiplayer extends GuiScreen {
 	protected void keyTyped(char var1, int var2) {
 		if(var1 == 9) {
 			if(this.focus == 0) this.focus = 1;
-			else this.focus = (this.focus == 1) ? 2 : 1;
+			else this.focus = (this.focus == 1) ? (this.locked ? 1 : 2) : 1;
 		} else if(var1 == 22) {
 			this.pasteIntoActive(GuiScreen.getClipboardString(), this.focus == 2 ? 32 : 16);
 		} else if(var1 == 13) {
@@ -83,7 +91,7 @@ public class GuiMultiplayer extends GuiScreen {
 		boolean var9 = var1 >= var4 && var1 <= var4 + var6 && var2 >= var5 && var2 <= var5 + var7;
 		boolean var10 = var1 >= var4 && var1 <= var4 + var6 && var2 >= var8 && var2 <= var8 + var7;
 		if(var9) this.focus = 1;
-		else if(var10) this.focus = 2;
+		else if(var10 && !this.locked) this.focus = 2;
 		else this.focus = 0;
 		super.mouseClicked(var1, var2, var3);
 	}
@@ -108,9 +116,9 @@ public class GuiMultiplayer extends GuiScreen {
 		int var9 = this.height / 4 - 10 + 50 + 18;
 		this.drawRect(var8 - 1, var9 - 1, var8 + var6 + 1, var9 + var7 + 1, -6250336);
 		this.drawRect(var8, var9, var8 + var6, var9 + var7, -16777216);
-		this.drawString(this.fontRenderer, this.serverAddress + (this.focus == 2 && this.parentScreen / 6 % 2 == 0 ? "_" : ""), var8 + 4, var9 + (var7 - 8) / 2, 14737632);
+		this.drawString(this.fontRenderer, this.serverAddress + (this.focus == 2 && !this.locked && this.parentScreen / 6 % 2 == 0 ? "_" : ""), var8 + 4, var9 + (var7 - 8) / 2, !this.locked ? 14737632 : 7829367);
 
-		if (EagRuntime.requireSSL()) {
+		if (EagRuntime.requireSSL() && !this.locked) {
 			this.drawCenteredString(this.fontRenderer, "you are on an https: page!", this.width / 2, this.height / 4 + 83,
 					0xccccff);
 			this.drawCenteredString(this.fontRenderer, "html5 will only allow wss://", this.width / 2, this.height / 4 + 95,

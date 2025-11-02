@@ -14,12 +14,12 @@ import net.minecraft.src.GLAllocation;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.GuiChat;
 import net.minecraft.src.GuiConflictWarning;
-import net.minecraft.src.GuiConnecting;
 import net.minecraft.src.GuiGameOver;
 import net.minecraft.src.GuiIngame;
 import net.minecraft.src.GuiIngameMenu;
 import net.minecraft.src.GuiInventory;
 import net.minecraft.src.GuiMainMenu;
+import net.minecraft.src.GuiMultiplayer;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.GuiUnused;
 import net.minecraft.src.ItemRenderer;
@@ -125,6 +125,9 @@ public class Minecraft implements Runnable {
 
 		this.field_6320_i = new Session("Player", "");
 		mc = this;
+
+		String joinServer = EagRuntime.getConfiguration().getServerToJoin();
+		if (joinServer != null) this.func_6258_a(joinServer);
 	}
 
 	public static Minecraft getMinecraft() {
@@ -193,7 +196,8 @@ public class Minecraft implements Runnable {
 		this.checkGLError("Post startup");
 		this.ingameGUI = new GuiIngame(this);
 		if(this.field_9234_V != null) {
-			this.displayGuiScreen(new GuiConnecting(this, this.field_9234_V));
+			// this.displayGuiScreen(new GuiConnecting(this, this.field_9234_V));
+			this.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu(), this.field_9234_V));
 		} else {
 			this.displayGuiScreen(new GuiMainMenu());
 		}

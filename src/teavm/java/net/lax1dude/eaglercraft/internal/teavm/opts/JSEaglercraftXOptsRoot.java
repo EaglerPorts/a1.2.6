@@ -30,6 +30,9 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(script = "return (typeof this.assetsURI === \"object\") ? this.assetsURI : null;")
 	public native JSArrayReader<JSEaglercraftXOptsAssetsURI> getAssetsURIArray();
 
+	@JSBody(params = { "def" }, script = "return (typeof this.joinServer === \"string\") ? this.joinServer : def;")
+	public native String getJoinServer(String defaultValue);
+
 	@JSBody(params = { "def" }, script = "return (typeof this.worldsDB === \"string\") ? this.worldsDB : def;")
 	public native String getWorldsDB(String defaultValue);
 

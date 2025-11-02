@@ -1,4 +1,4 @@
 #!/bin/sh
 cd ../
-chmod +x gradlew
+sh ./scripts/wrapper.sh
 ./gradlew target_teavm_wasm_gc:makeMainWasmClientBundle

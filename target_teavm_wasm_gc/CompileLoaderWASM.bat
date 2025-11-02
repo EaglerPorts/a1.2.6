@@ -1,5 +1,4 @@
 @echo off
-title CompileLoaderWASM
 mkdir "bin/emscripten"
 call emcc -c -O3 ../src/wasm-gc-teavm-loader/c/main.c -o bin/emscripten/main.o
 call emcc -c -O3 ../src/wasm-gc-teavm-loader/c/xz/xz_crc32.c -o bin/emscripten/xz_crc32.o
