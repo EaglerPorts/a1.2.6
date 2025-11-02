@@ -37,7 +37,7 @@ jobs:
           cache-read-only: false
 
       - name: Build Client
-        run: ./CompileClients.sh
+        run: ./CompileClient.sh
 
       - name: Get short commit hash
         id: vars
