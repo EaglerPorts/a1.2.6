@@ -30,6 +30,7 @@ public class GuiMultiplayer extends GuiScreen {
 		this.controlList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, "Connect"));
 		this.controlList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12, "Cancel"));
 		if (!this.locked) this.serverAddress = this.mc.gameSettings.field_12259_z.replaceAll("_", ":");
+		else this.mc.gameSettings.field_12259_z = this.serverAddress.replaceAll(":", "_");
 		this.username = EaglerProfile.getName();
 		((GuiButton)this.controlList.get(0)).enabled = this.serverAddress.length() > 0 && this.username.length() > 0;
 	}

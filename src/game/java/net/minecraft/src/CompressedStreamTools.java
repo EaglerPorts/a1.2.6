@@ -9,12 +9,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+
+import net.lax1dude.eaglercraft.EaglerZLIB;
 
 public class CompressedStreamTools {
 	public static NBTTagCompound func_1138_a(InputStream var0) throws IOException {
-		DataInputStream var1 = new DataInputStream(new GZIPInputStream(var0));
+		DataInputStream var1 = new DataInputStream(EaglerZLIB.newGZIPInputStream(var0));
 
 		NBTTagCompound var2;
 		try {
@@ -27,7 +27,7 @@ public class CompressedStreamTools {
 	}
 
 	public static void writeGzippedCompoundToOutputStream(NBTTagCompound var0, OutputStream var1) throws IOException {
-		DataOutputStream var2 = new DataOutputStream(new GZIPOutputStream(var1));
+		DataOutputStream var2 = new DataOutputStream(EaglerZLIB.newGZIPOutputStream(var1));
 
 		try {
 			func_1139_a(var0, var2);
@@ -38,7 +38,7 @@ public class CompressedStreamTools {
 	}
 
 	public static NBTTagCompound func_1140_a(byte[] var0) throws IOException {
-		DataInputStream var1 = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(var0)));
+		DataInputStream var1 = new DataInputStream(EaglerZLIB.newGZIPInputStream(new ByteArrayInputStream(var0)));
 
 		NBTTagCompound var2;
 		try {
@@ -52,7 +52,7 @@ public class CompressedStreamTools {
 
 	public static byte[] func_1142_a(NBTTagCompound var0) throws IOException {
 		ByteArrayOutputStream var1 = new ByteArrayOutputStream();
-		DataOutputStream var2 = new DataOutputStream(new GZIPOutputStream(var1));
+		DataOutputStream var2 = new DataOutputStream(EaglerZLIB.newGZIPOutputStream(var1));
 
 		try {
 			func_1139_a(var0, var2);

@@ -9,12 +9,13 @@ This is a fully functional web port of Minecraft Alpha 1.2.6, playable in any mo
 
 ## Quick Start
 ### Play Now:
+
 **Client:** https://eaglerports.github.io/a1.2.6/
 
-**Other Minecraft Web Ports:** https://eaglerports.github.io
+**Other Minecraft Web Ports:** https://eaglerports.github.io/
 
 ### Offline Downloads:
-You can grab the latest build here: [Releases](https://github.com/EaglerPorts/a1.2.6/releases) or compile it yourself.
+You can grab the latest build here from the [releases](https://github.com/EaglerPorts/0.0.0/releases) or compile it yourself.
 
 ## Compiling
 Run the `CompileClient` script to build the JavaScript and WASM-GC clients. The results will be in the `client` folder.
