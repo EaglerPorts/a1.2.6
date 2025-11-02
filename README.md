@@ -7,7 +7,6 @@ This is a fully functional web port of Minecraft Alpha 1.2.6, playable directly 
 > [!WARNING]
 > This is not a pirated version of Minecraft, This is a project that simply is just some "addons" for Minecraft Alpha 1.2.6 that allows it to be playable in the browser, This project does not distribute or include any copyrighted assets from the original game.
 
-
 ## Quick Start
 ### Play Now:
 **Client:** https://eaglerports.github.io/a1.2.6/
