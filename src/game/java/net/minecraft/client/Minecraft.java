@@ -47,7 +47,6 @@ import net.minecraft.src.TextureCompassFX;
 import net.minecraft.src.TextureFlamesFX;
 import net.minecraft.src.TextureLavaFX;
 import net.minecraft.src.TextureLavaFlowFX;
-import net.minecraft.src.TexturePackList;
 import net.minecraft.src.TexturePortalFX;
 import net.minecraft.src.TextureWatchFX;
 import net.minecraft.src.TextureWaterFX;
@@ -66,6 +65,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+import dev.colbster937.eaglercraft.rp.TexturePack;
 import dev.colbster937.eaglercraft.utils.StringPrintStream;
 
 public class Minecraft implements Runnable {
@@ -97,7 +97,6 @@ public class Minecraft implements Runnable {
 	public GameSettings gameSettings;
 	public SoundManager sndManager = new SoundManager();
 	public MouseHelper mouseHelper;
-	public TexturePackList texturePackList;
 	public VFile2 field_6297_D;
 	public static long[] field_9240_E = new long[512];
 	public static long[] field_9239_F = new long[512];
@@ -160,8 +159,8 @@ public class Minecraft implements Runnable {
 		RenderManager.instance.field_4236_f = new ItemRenderer(this);
 		this.field_6297_D = getMinecraftDir();
 		this.gameSettings = new GameSettings(this, this.field_6297_D);
-		this.texturePackList = new TexturePackList(this, this.field_6297_D);
-		this.renderEngine = new RenderEngine(this.texturePackList, this.gameSettings);
+		this.renderEngine = new RenderEngine(this.gameSettings);
+		TexturePack.init(this);
 		this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine);
 		this.loadScreen();
 		this.mouseHelper = new MouseHelper();

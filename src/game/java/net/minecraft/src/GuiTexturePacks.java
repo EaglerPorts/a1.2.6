@@ -1,9 +1,11 @@
 package net.minecraft.src;
 
+import java.io.IOException;
 import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import dev.colbster937.eaglercraft.rp.TexturePack;
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
@@ -26,7 +28,7 @@ public class GuiTexturePacks extends GuiScreen {
 	public void initGui() {
 		this.controlList.add(new GuiSmallButton(5, this.width / 2 - 154, this.height - 48, "Open texture pack"));
 		this.controlList.add(new GuiSmallButton(6, this.width / 2 + 4, this.height - 48, "Done"));
-		this.mc.texturePackList.func_6532_a();
+		TexturePack.getTexturePacks();
 		this.field_6453_p = (new VFile2(this.mc.field_6297_D, "texturepacks")).getPath();
 		this.field_6459_i = 32;
 		this.field_6458_j = this.height - 58 + 4;
@@ -59,11 +61,11 @@ public class GuiTexturePacks extends GuiScreen {
 	public void drawScreen(int var1, int var2, float var3) {
 		this.drawDefaultBackground();
 		if(this.field_6454_o <= 0) {
-			this.mc.texturePackList.func_6532_a();
+			TexturePack.getTexturePacks();
 			this.field_6454_o += 20;
 		}
 
-		List var4 = this.mc.texturePackList.availableTexturePacks();
+		List<TexturePack> var4 = TexturePack.getTexturePacks();
 		int var5;
 		if(Mouse.isButtonDown(0)) {
 			if(this.field_6455_n == -1) {
@@ -71,8 +73,8 @@ public class GuiTexturePacks extends GuiScreen {
 					var5 = this.width / 2 - 110;
 					int var6 = this.width / 2 + 110;
 					int var7 = (var2 - this.field_6459_i + this.field_6460_h - 2) / 36;
-					if(var1 >= var5 && var1 <= var6 && var7 >= 0 && var7 < var4.size() && this.mc.texturePackList.setTexturePack((TexturePackBase)var4.get(var7))) {
-						this.mc.renderEngine.refreshTextures();
+					if(var1 >= var5 && var1 <= var6 && var7 >= 0) {
+						TexturePack.setSelectedPack(var4.get(var7));
 					}
 
 					this.field_6455_n = var2;
@@ -118,12 +120,12 @@ public class GuiTexturePacks extends GuiScreen {
 		var16.draw();
 
 		for(int var8 = 0; var8 < var4.size(); ++var8) {
-			TexturePackBase var9 = (TexturePackBase)var4.get(var8);
+			TexturePack var9 = var4.get(var8);
 			int var10 = this.width / 2 - 92 - 16;
 			int var11 = 36 + var8 * 36 - this.field_6460_h;
 			byte var12 = 32;
 			byte var13 = 32;
-			if(var9 == this.mc.texturePackList.selectedTexturePack) {
+			if(TexturePack.isSelectedPack(var8)) {
 				int var14 = this.width / 2 - 110;
 				int var15 = this.width / 2 + 110;
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -143,7 +145,7 @@ public class GuiTexturePacks extends GuiScreen {
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 			}
 
-			var9.func_6483_c(this.mc);
+			var9.bindIconTexture();
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			var16.startDrawingQuads();
 			var16.setColorOpaque_I(16777215);
@@ -152,9 +154,10 @@ public class GuiTexturePacks extends GuiScreen {
 			var16.addVertexWithUV((double)(var10 + var13), (double)var11, 0.0D, 1.0D, 0.0D);
 			var16.addVertexWithUV((double)var10, (double)var11, 0.0D, 0.0D, 0.0D);
 			var16.draw();
-			this.drawString(this.fontRenderer, var9.texturePackFileName, var10 + var13 + 2, var11 + 1, 16777215);
-			this.drawString(this.fontRenderer, var9.firstDescriptionLine, var10 + var13 + 2, var11 + 12, 8421504);
-			this.drawString(this.fontRenderer, var9.secondDescriptionLine, var10 + var13 + 2, var11 + 12 + 10, 8421504);
+			this.drawString(this.fontRenderer, var9.getName(), var10 + var13 + 2, var11 + 1, 16777215);
+			String[] desc = var9.getDescription();
+			this.drawString(this.fontRenderer, desc[0], var10 + var13 + 2, var11 + 12, 8421504);
+			this.drawString(this.fontRenderer, desc[1], var10 + var13 + 2, var11 + 12 + 10, 8421504);
 		}
 
 		byte var18 = 4;
@@ -194,7 +197,11 @@ public class GuiTexturePacks extends GuiScreen {
 		super.updateScreen();
 		if (EagRuntime.fileChooserHasResult()) {
 			FileChooserResult result = EagRuntime.getFileChooserResult();
-			this.mc.texturePackList.addTexturePack(result.fileData, result.fileName);
+			try {
+				TexturePack.addTexturePack(result, this.mc.loadingScreen);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		--this.field_6454_o;
 	}
