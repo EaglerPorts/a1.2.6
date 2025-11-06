@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
-import net.lax1dude.eaglercraft.EagRuntime;
+import dev.colbster937.eaglercraft.rp.TexturePack;
+
 import net.lax1dude.eaglercraft.opengl.ImageData;
 
 public class ColorizerGrass {
@@ -15,7 +16,7 @@ public class ColorizerGrass {
 
 	static {
 		try {
-			ImageData var0 = ImageData.loadImageFile(EagRuntime.getResourceStream("/misc/grasscolor.png")).swapRB();
+			ImageData var0 = ImageData.loadImageFile(TexturePack.getResourceAsStream("/misc/grasscolor.png")).swapRB();
 			var0.getRGB(0, 0, 256, 256, field_6540_a, 0, 256);
 		} catch (Exception var1) {
 			var1.printStackTrace();

@@ -1,9 +1,9 @@
 package net.minecraft.src;
 
-import java.io.IOException;
 import java.util.Arrays;
 
-import net.lax1dude.eaglercraft.EagRuntime;
+import dev.colbster937.eaglercraft.rp.TexturePack;
+
 import net.lax1dude.eaglercraft.opengl.ImageData;
 
 public class TerrainTextureManager {
@@ -17,7 +17,7 @@ public class TerrainTextureManager {
 
 	public TerrainTextureManager() {
 		try {
-			ImageData var1 = ImageData.loadImageFile(EagRuntime.getResourceStream("/terrain.png"));
+			ImageData var1 = ImageData.loadImageFile(TexturePack.getResourceAsStream("/terrain.png"));
 			int[] var2 = new int[65536];
 			var1.getRGB(0, 0, 256, 256, var2, 0, 256);
 

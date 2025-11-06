@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import dev.colbster937.eaglercraft.EaglercraftVersion;
+import dev.colbster937.eaglercraft.rp.TexturePack;
+
 import net.lax1dude.eaglercraft.EagRuntime;
 
 public class GuiMainMenu extends GuiScreen {
@@ -22,7 +24,7 @@ public class GuiMainMenu extends GuiScreen {
 	public GuiMainMenu() {
 		try {
 			ArrayList var1 = new ArrayList();
-			BufferedReader var2 = new BufferedReader(new InputStreamReader(EagRuntime.getResourceStream("/title/splashes.txt")));
+			BufferedReader var2 = new BufferedReader(new InputStreamReader(TexturePack.getResourceAsStream("/title/splashes.txt")));
 			String var3 = "";
 
 			while(true) {
@@ -93,7 +95,6 @@ public class GuiMainMenu extends GuiScreen {
 		}
 
 		if(var1.id == 2) {
-			// this.mc.displayGuiScreen(new GuiScreenInfo(this, new TextLine("Multiplayer has not been added yet.", 0xFFCCCC), new TextLine(""), new TextLine("It will be implemented soon, be patient you eagler!", 0x888888)));
 			this.mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 

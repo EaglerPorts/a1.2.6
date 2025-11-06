@@ -24,4 +24,7 @@ public class FormattingCodes {
   public static final String UNDERLINE = SYMBOL + "n";
   public static final String ITALIC = SYMBOL + "o";
   public static final String RESET = SYMBOL + "r";
+
+  public static final int COLOR_INFO = 0xCCCCFF;
+  public static final int COLOR_ERROR = 0xFFCCCC;
 }

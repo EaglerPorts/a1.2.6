@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import dev.colbster937.eaglercraft.FormattingCodes;
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.profile.EaglerProfile;
 
@@ -121,9 +122,9 @@ public class GuiMultiplayer extends GuiScreen {
 
 		if (EagRuntime.requireSSL() && !this.locked) {
 			this.drawCenteredString(this.fontRenderer, "you are on an https: page!", this.width / 2, this.height / 4 + 83,
-					0xccccff);
+					FormattingCodes.COLOR_INFO);
 			this.drawCenteredString(this.fontRenderer, "html5 will only allow wss://", this.width / 2, this.height / 4 + 95,
-					0xccccff);
+					FormattingCodes.COLOR_INFO);
 		}
 
 		super.drawScreen(var1, var2, var3);

@@ -10,6 +10,10 @@ import java.util.zip.ZipInputStream;
 
 import org.lwjgl.opengl.GL11;
 
+import dev.colbster937.eaglercraft.FormattingCodes;
+import dev.colbster937.eaglercraft.gui.GuiScreenInfo;
+import dev.colbster937.eaglercraft.gui.GuiScreenInfo.TextLine;
+
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.EaglerInputStream;
 import net.lax1dude.eaglercraft.EaglercraftUUID;
@@ -195,7 +199,8 @@ public class TexturePack {
     mc.gameSettings.skin = pack.getName();
     mc.gameSettings.saveOptions();
     mc.renderEngine.refreshTextures();
-    updateProgress(prog, "Refreshing Texture Pack");
+    mc.field_6323_f.func_958_a();
+    // updateProgress(prog, "Refreshing Texture Pack");
   }
 
   public static void setDefaultPack(IProgressUpdate prog) {
@@ -219,6 +224,25 @@ public class TexturePack {
   }
 
   public static void addTexturePack(String name, byte[] data, IProgressUpdate prog) throws IOException {
+    int fileCount = 0;
+    boolean valid = false;
+
+    ZipEntry entry;
+
+    try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data.clone()))) {
+      while ((entry = zis.getNextEntry()) != null) {
+        if (!entry.isDirectory())
+          fileCount++;
+        if ("pack.txt".equals(entry.getName()))
+          valid = true;
+      }
+    }
+
+    if (!valid) {
+      mc.displayGuiScreen(new GuiScreenInfo(mc.currentScreen, new TextLine(HString.format("'%s' is not a valid texture pack!", name), FormattingCodes.COLOR_ERROR)));
+      return;
+    }
+
     List<TexturePack> existingPacks = getTexturePacks();
 
     int d = name.lastIndexOf('.');
@@ -231,17 +255,8 @@ public class TexturePack {
 
     TexturePack pack = new TexturePack(name);
     List<String> files = new ArrayList<>();
-    int count = 0;
 
     updateProgress(prog, "Extracting Files");
-
-    ZipEntry entry;
-
-    try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data.clone()))) {
-      while ((entry = zis.getNextEntry()) != null)
-        if (!entry.isDirectory())
-          count++;
-    }
 
     try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data))) {
       int i = 0;
@@ -251,7 +266,7 @@ public class TexturePack {
         String file = entry.getName();
         files.add(file);
         updateProgress(prog,
-            HString.format("Extracting '%s'", file), (int) Math.round((++i * 100.0) / count));
+            HString.format("Extracting '%s'", file), (int) Math.round((++i * 100.0) / fileCount));
         (new VFile2(pack.pack, file)).setAllBytes(EaglerInputStream.inputStreamToBytesNoClose(zis));
       }
     }

@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
-import net.lax1dude.eaglercraft.EagRuntime;
+import dev.colbster937.eaglercraft.rp.TexturePack;
+
 import net.lax1dude.eaglercraft.opengl.ImageData;
 
 public class ColorizerFoliage {
@@ -15,7 +16,7 @@ public class ColorizerFoliage {
 
 	static {
 		try {
-			ImageData var0 = ImageData.loadImageFile(EagRuntime.getResourceStream("/misc/foliagecolor.png")).swapRB();
+			ImageData var0 = ImageData.loadImageFile(TexturePack.getResourceAsStream("/misc/foliagecolor.png")).swapRB();
 			var0.getRGB(0, 0, 256, 256, field_6529_a, 0, 256);
 		} catch (Exception var1) {
 			var1.printStackTrace();
