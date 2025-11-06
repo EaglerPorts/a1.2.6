@@ -5,10 +5,13 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import dev.colbster937.eaglercraft.gui.GuiScreenTexturePackOptions;
 import dev.colbster937.eaglercraft.rp.TexturePack;
+import dev.colbster937.eaglercraft.utils.ScuffedUtils;
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
+import net.minecraft.client.Minecraft;
 
 public class GuiTexturePacks extends GuiScreen {
 	protected GuiScreen field_6461_a;
@@ -74,7 +77,9 @@ public class GuiTexturePacks extends GuiScreen {
 					int var6 = this.width / 2 + 110;
 					int var7 = (var2 - this.field_6459_i + this.field_6460_h - 2) / 36;
 					if(var1 >= var5 && var1 <= var6 && var7 >= 0) {
-						TexturePack.setSelectedPack(var4.get(var7));
+						TexturePack pack = TexturePack.getTexturePacks().get(var7);
+						if (!TexturePack.isDefaultPack(pack) && !ScuffedUtils.isShiftKeyDown()) Minecraft.getMinecraft().displayGuiScreen(new GuiScreenTexturePackOptions(this, pack));
+						else TexturePack.setSelectedPack(pack);
 					}
 
 					this.field_6455_n = var2;

@@ -99,8 +99,9 @@ public class TexturePack {
   }
 
   public void bindIconTexture() {
-    if (this.icon != null) {
-      if (this.iconTexture < 0) this.iconTexture = mc.renderEngine.allocateAndSetupTexture(this.icon);
+    if (this.getIcon() != null) {
+      if (this.iconTexture < 0)
+        this.iconTexture = mc.renderEngine.allocateAndSetupTexture(this.getIcon());
       mc.renderEngine.bindTexture(this.iconTexture);
     } else {
       GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/unknown_pack.png"));
@@ -108,13 +109,16 @@ public class TexturePack {
   }
 
   public void delete(IProgressUpdate prog) {
-    updateProgress(prog, "Deletinging Files");
+    updateProgress(prog, "Deleting Files");
     String[] files = this.files.getAllLines();
     for (int i = 0; i < files.length; i++) {
       VFile2 file = new VFile2(pack, files[i]);
-      updateProgress(prog, HString.format("Deleting %s", file.getName()),
+      String path = file.getPath();
+      updateProgress(prog,
+          HString.format("Deleting '%s'", path.substring(pack.getPath().length() + 1, path.length())),
           (int) Math.round(((i + 1) * 100.0) / files.length));
-      file.delete();
+      if (file.exists())
+        file.delete();
     }
     PrintWriter pw = new PrintWriter(packs.getOutputStream());
     for (String file : packs.getAllLines())
@@ -142,8 +146,12 @@ public class TexturePack {
     this.icon = null;
   }
 
-  private boolean isPack(TexturePack pack) {
+  public boolean isPack(TexturePack pack) {
     return this.id.equals(pack.id);
+  }
+
+  public boolean isDefaultPack() {
+    return isDefaultPack(this);
   }
 
   public static void init(Minecraft mc) {
@@ -151,7 +159,7 @@ public class TexturePack {
     if (!mc.gameSettings.skin.equals("Default"))
       selectedPack = new TexturePack(mc.gameSettings.skin);
     else
-      selectedPack = DefaultTexturePack.getInstance();
+      selectedPack = DefaultTexturePack.instance;
   }
 
   public static List<TexturePack> getTexturePacks() {
@@ -163,10 +171,11 @@ public class TexturePack {
         for (TexturePack pack : texturePacksCache)
           pack.dispose();
       List<TexturePack> arr = new ArrayList<>();
-      arr.add(DefaultTexturePack.getInstance());
+      arr.add(DefaultTexturePack.instance);
       if (packs.exists()) {
         for (String pack : packs.getAllLines()) {
-          arr.add(new TexturePack(pack));
+          if (!pack.isBlank() && !pack.isEmpty())
+            arr.add(new TexturePack(pack));
         }
       }
       return texturePacksCache = arr;
@@ -190,7 +199,7 @@ public class TexturePack {
   }
 
   public static void setDefaultPack(IProgressUpdate prog) {
-    setSelectedPack((TexturePack) null, prog);
+    setSelectedPack(DefaultTexturePack.instance, prog);
   }
 
   public static void setSelectedPack(TexturePack pack) {
@@ -222,25 +231,32 @@ public class TexturePack {
 
     TexturePack pack = new TexturePack(name);
     List<String> files = new ArrayList<>();
+    int count = 0;
 
     updateProgress(prog, "Extracting Files");
 
+    ZipEntry entry;
+
+    try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data.clone()))) {
+      while ((entry = zis.getNextEntry()) != null)
+        if (!entry.isDirectory())
+          count++;
+    }
+
     try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data))) {
-      ZipEntry entry;
+      int i = 0;
       while ((entry = zis.getNextEntry()) != null) {
-        if (entry.isDirectory()) {
-          zis.closeEntry();
+        if (entry.isDirectory())
           continue;
-        }
         String file = entry.getName();
         files.add(file);
-        updateProgress(prog, HString.format("Extracting %s", file));
+        updateProgress(prog,
+            HString.format("Extracting '%s'", file), (int) Math.round((++i * 100.0) / count));
         (new VFile2(pack.pack, file)).setAllBytes(EaglerInputStream.inputStreamToBytesNoClose(zis));
-        zis.closeEntry();
       }
     }
 
-    updateProgress(prog, HString.format("Updating Manifest"));
+    updateProgress(prog, "Updating Manifest");
 
     PrintWriter pw = new PrintWriter(pack.files.getOutputStream());
 
@@ -283,6 +299,10 @@ public class TexturePack {
       return EagRuntime.getResourceStream(path);
   }
 
+  public static boolean isDefaultPack(TexturePack pack) {
+    return pack instanceof DefaultTexturePack;
+  }
+
   private static void updateProgress(IProgressUpdate prog, String text, int perc) {
     if (prog != null) {
       if (text != null && !text.isEmpty() && !text.isBlank())
@@ -300,5 +320,25 @@ public class TexturePack {
     if (var1 != null && var1.length() > 34)
       var1 = var1.substring(0, 34);
     return var1;
+  }
+
+  private static class DefaultTexturePack extends TexturePack {
+    private static final DefaultTexturePack instance = new DefaultTexturePack();
+
+    private final ImageData icon = ImageData.loadImageFile(this.getResourceStream("pack.png"));
+
+    protected DefaultTexturePack() {
+      super("Default", new String[] { "The default look of Minecraft" });
+    }
+
+    @Override
+    public ImageData getIcon() {
+      return this.icon;
+    }
+
+    @Override
+    public InputStream getResourceStream(String path) {
+      return EagRuntime.getResourceStream(path);
+    }
   }
 }

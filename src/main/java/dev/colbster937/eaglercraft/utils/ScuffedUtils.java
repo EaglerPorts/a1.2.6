@@ -29,4 +29,8 @@ public class ScuffedUtils {
   public static boolean isCtrlKeyDown() {
     return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
   }
+
+  public static boolean isShiftKeyDown() {
+    return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+  }
 }

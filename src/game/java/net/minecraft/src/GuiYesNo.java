@@ -4,18 +4,26 @@ public class GuiYesNo extends GuiScreen {
 	private GuiScreen parentScreen;
 	private String message1;
 	private String message2;
+	private String buttonText1;
+	private String buttonText2;
 	private int worldNumber;
 
-	public GuiYesNo(GuiScreen var1, String var2, String var3, int var4) {
+	public GuiYesNo(GuiScreen var1, String var2, String var3, String var4, String var5, int var6) {
 		this.parentScreen = var1;
 		this.message1 = var2;
 		this.message2 = var3;
-		this.worldNumber = var4;
+		this.buttonText1 = var4;
+		this.buttonText2 = var5;
+		this.worldNumber = var6;
+	}
+
+	public GuiYesNo(GuiScreen var1, String var2, String var3, int var4) {
+		this(var1, var2, var3, "Yes", "No", var4);
 	}
 
 	public void initGui() {
-		this.controlList.add(new GuiSmallButton(0, this.width / 2 - 155 + 0, this.height / 6 + 96, "Yes"));
-		this.controlList.add(new GuiSmallButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, "No"));
+		this.controlList.add(new GuiSmallButton(0, this.width / 2 - 155 + 0, this.height / 6 + 96, this.buttonText1));
+		this.controlList.add(new GuiSmallButton(1, this.width / 2 - 155 + 160, this.height / 6 + 96, this.buttonText2));
 	}
 
 	protected void actionPerformed(GuiButton var1) {
