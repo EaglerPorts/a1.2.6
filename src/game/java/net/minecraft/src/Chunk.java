@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.Random;
 
 public class Chunk {
@@ -377,6 +379,7 @@ public class Chunk {
 			int var3 = MathHelper.floor_double(var1.posZ / 16.0D);
 			if(var2 != this.xPosition || var3 != this.zPosition) {
 				System.out.println("Wrong location! " + var1);
+				EagRuntime.dumpStack();
 			}
 
 			int var4 = MathHelper.floor_double(var1.posY / 16.0D);

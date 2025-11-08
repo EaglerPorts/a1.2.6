@@ -18,6 +18,7 @@ public class GuiMultiplayer extends GuiScreen {
 	}
 
 	public GuiMultiplayer(GuiScreen var0, String var1) {
+		this.updateCounter = var0;
 		this.serverAddress = var1;
 		this.locked = true;
 	}
