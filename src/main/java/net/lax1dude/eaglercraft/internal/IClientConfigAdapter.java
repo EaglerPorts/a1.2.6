@@ -34,6 +34,8 @@ public interface IClientConfigAdapter {
 
 	boolean isEnforceVSync();
 
+	boolean isEnableGithubButton();
+
 	IClientConfigAdapterHooks getHooks();
 
 }

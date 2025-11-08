@@ -52,6 +52,7 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 	private boolean finishOnSwap = true;
 
 	private String serverToJoin = null;
+	private boolean enableGithubButton = true;
 
 	public void loadNative(JSObject jsObject) {
 		JSEaglercraftXOptsRoot eaglercraftXOpts = (JSEaglercraftXOptsRoot)jsObject;
@@ -77,6 +78,7 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 		keepAliveHack = eaglercraftXOpts.getKeepAliveHack(true);
 		finishOnSwap = eaglercraftXOpts.getFinishOnSwap(true);
 		serverToJoin = eaglercraftXOpts.getJoinServer(null);
+		enableGithubButton = eaglercraftXOpts.getEnableGithubButton(true);
 		JSEaglercraftXOptsHooks hooksObj = eaglercraftXOpts.getHooks();
 		if(hooksObj != null) {
 			hooks.loadHooks(hooksObj);
@@ -178,5 +180,10 @@ public class WASMGCClientConfigAdapter implements IClientConfigAdapter {
 	@Override
 	public IClientConfigAdapterHooks getHooks() {
 		return hooks;
+	}
+
+	@Override
+	public boolean isEnableGithubButton() {
+		return enableGithubButton;
 	}
 }

@@ -178,4 +178,7 @@ public interface JSEaglercraftXOptsRoot extends JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.finishOnSwap === \"boolean\") ? this.finishOnSwap : def;")
 	boolean getFinishOnSwap(boolean finishOnSwap);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.enableGithubButton === \"boolean\") ? this.enableGithubButton : def;")
+	boolean getEnableGithubButton(boolean defaultValue);
+
 }

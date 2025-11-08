@@ -96,4 +96,7 @@ public abstract class JSEaglercraftXOptsRoot implements JSObject {
 	@JSBody(params = { "def" }, script = "return (typeof this.finishOnSwap === \"boolean\") ? this.finishOnSwap : def;")
 	public native boolean getFinishOnSwap(boolean finishOnSwap);
 
+	@JSBody(params = { "def" }, script = "return (typeof this.enableGithubButton === \"boolean\") ? this.enableGithubButton : def;")
+	public native boolean getEnableGithubButton(boolean defaultValue);
+
 }
