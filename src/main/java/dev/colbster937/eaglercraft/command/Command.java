@@ -54,13 +54,13 @@ public class Command {
       return coord;
     if (s.startsWith("~")) {
       try {
-        return coord + (s.length() == 1 ? 0 : Integer.parseInt(s.substring(1)));
+        return coord + (s.length() == 1 ? 0 : Double.parseDouble(s.substring(1)));
       } catch (Throwable e) {
         return coord;
       }
     }
     try {
-      return Integer.parseInt(s);
+      return Double.parseDouble(s);
     } catch (Throwable t) {
       return coord;
     }
