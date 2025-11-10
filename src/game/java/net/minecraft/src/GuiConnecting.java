@@ -17,7 +17,7 @@ public class GuiConnecting extends GuiScreen {
 	private int timer = 0;
 
 	public GuiConnecting(Minecraft var1, String var2) {
-		var1.func_6261_a((World)null);
+		var1.func_6261_a((World) null);
 		this.currentAddress = AddressResolver.resolveURI(var2);
 		this.clientHandler = new NetClientHandler(var1);
 	}
@@ -29,7 +29,8 @@ public class GuiConnecting extends GuiScreen {
 				this.webSocket = PlatformNetworking.openWebSocket(this.currentAddress);
 				if (this.webSocket.getState() == EnumEaglerConnectionState.FAILED
 						|| this.webSocket.getState() == EnumEaglerConnectionState.CLOSED) {
-					this.mc.displayGuiScreen(new GuiConnectFailed("Failed to connect to the server", "Could not open websocket to\"" + this.currentAddress + "\"!"));
+					this.mc.displayGuiScreen(new GuiConnectFailed("Failed to connect to the server",
+							"Could not open websocket to\"" + this.currentAddress + "\"!"));
 				}
 			} else {
 				if (this.webSocket.getState() == EnumEaglerConnectionState.CONNECTED) {
@@ -69,25 +70,27 @@ public class GuiConnecting extends GuiScreen {
 	}
 
 	protected void actionPerformed(GuiButton var1) {
-		if(var1.id == 0) {
+		if (var1.id == 0) {
 			this.cancelled = true;
-			if(this.clientHandler != null) {
+			if (this.clientHandler != null) {
 				this.clientHandler.disconnect();
 			}
 
-			this.mc.displayGuiScreen(new GuiMainMenu());
+			this.mc.displayGuiScreen(this.mc.menu);
 		}
 
 	}
 
 	public void drawScreen(int var1, int var2, float var3) {
 		this.drawDefaultBackground();
-		if(this.clientHandler == null) {
-			this.drawCenteredString(this.fontRenderer, "Connecting to the server...", this.width / 2, this.height / 2 - 50, 16777215);
+		if (this.clientHandler == null) {
+			this.drawCenteredString(this.fontRenderer, "Connecting to the server...", this.width / 2, this.height / 2 - 50,
+					16777215);
 			this.drawCenteredString(this.fontRenderer, "", this.width / 2, this.height / 2 - 10, 16777215);
 		} else {
 			this.drawCenteredString(this.fontRenderer, "Logging in...", this.width / 2, this.height / 2 - 50, 16777215);
-			this.drawCenteredString(this.fontRenderer, this.clientHandler.field_1209_a, this.width / 2, this.height / 2 - 10, 16777215);
+			this.drawCenteredString(this.fontRenderer, this.clientHandler.field_1209_a, this.width / 2, this.height / 2 - 10,
+					16777215);
 		}
 
 		super.drawScreen(var1, var2, var3);

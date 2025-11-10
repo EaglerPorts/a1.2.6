@@ -21,8 +21,8 @@ public class GuiConnectFailed extends GuiScreen {
 	}
 
 	protected void actionPerformed(GuiButton var1) {
-		if(var1.id == 0) {
-			this.mc.displayGuiScreen(new GuiMainMenu());
+		if (var1.id == 0) {
+			this.mc.displayGuiScreen(this.mc.menu);
 		}
 
 	}

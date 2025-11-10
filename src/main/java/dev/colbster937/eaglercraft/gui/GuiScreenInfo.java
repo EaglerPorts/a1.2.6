@@ -3,6 +3,7 @@ package dev.colbster937.eaglercraft.gui;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiMainMenu;
 import net.minecraft.src.GuiScreen;
+import net.peyton.java.awt.Color;
 
 public class GuiScreenInfo extends GuiScreen {
   private final GuiScreen parent;
@@ -19,10 +20,12 @@ public class GuiScreenInfo extends GuiScreen {
     this(null, lines);
   }
 
+  @Override
   public void initGui() {
     controlList.add(new GuiButton(0, (width - 200) / 2, height / 4 + 132, this.mm ? "Back to title screen" : "Done"));
   }
 
+  @Override
   public void drawScreen(int mx, int my, float f) {
     drawDefaultBackground();
     for (int i = 0; i < lines.length; i++) {
@@ -33,10 +36,11 @@ public class GuiScreenInfo extends GuiScreen {
     super.drawScreen(mx, my, f);
   }
 
+  @Override
   protected void actionPerformed(GuiButton var1) {
     if (var1.id == 0) {
       if (this.parent == null)
-        this.mc.displayGuiScreen(new GuiMainMenu());
+        this.mc.displayGuiScreen(this.mc.menu);
       else
         this.mc.displayGuiScreen(parent);
     }
@@ -53,7 +57,7 @@ public class GuiScreenInfo extends GuiScreen {
     }
 
     public TextLine(String text) {
-      this(text, 16777215);
+      this(text, Color.WHITE.getRGB());
     }
   }
 }

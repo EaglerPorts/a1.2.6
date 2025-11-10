@@ -66,6 +66,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import dev.colbster937.eaglercraft.rp.TexturePack;
+import dev.colbster937.eaglercraft.storage.SaveUtils;
 import dev.colbster937.eaglercraft.utils.StringPrintStream;
 
 public class Minecraft implements Runnable {
@@ -118,6 +119,8 @@ public class Minecraft implements Runnable {
 
 	private static Minecraft mc;
 
+	public GuiMainMenu menu = new GuiMainMenu();
+
 	public Minecraft() {
 		this.displayWidth = Display.getWidth();
 		this.displayHeight = Display.getHeight();
@@ -161,6 +164,7 @@ public class Minecraft implements Runnable {
 		this.gameSettings = new GameSettings(this, this.field_6297_D);
 		this.renderEngine = new RenderEngine(this.gameSettings);
 		TexturePack.init(this);
+		SaveUtils.init(this);
 		this.fontRenderer = new FontRenderer(this.gameSettings, "/font/default.png", this.renderEngine);
 		this.loadScreen();
 		this.mouseHelper = new MouseHelper();
@@ -196,9 +200,9 @@ public class Minecraft implements Runnable {
 		this.ingameGUI = new GuiIngame(this);
 		if(this.field_9234_V != null) {
 			// this.displayGuiScreen(new GuiConnecting(this, this.field_9234_V));
-			this.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu(), this.field_9234_V));
+			this.displayGuiScreen(new GuiMultiplayer(this.menu, this.field_9234_V));
 		} else {
-			this.displayGuiScreen(new GuiMainMenu());
+			this.displayGuiScreen(this.menu);
 		}
 
 	}
@@ -272,7 +276,7 @@ public class Minecraft implements Runnable {
 			}
 
 			if(var1 == null && this.theWorld == null) {
-				var1 = new GuiMainMenu();
+				var1 = this.menu;
 			} else if(var1 == null && this.thePlayer.health <= 0) {
 				var1 = new GuiGameOver();
 			}
@@ -513,7 +517,7 @@ public class Minecraft implements Runnable {
 		if(Display.isActive()) {
 			if(!this.field_6289_L) {
 				this.field_6289_L = true;
-				this.mouseHelper.func_774_a();
+				if (this.currentScreen == null) this.mouseHelper.func_774_a();
 				this.displayGuiScreen((GuiScreen)null);
 				this.field_6302_aa = this.ticksRan + 10000;
 			}
@@ -616,7 +620,6 @@ public class Minecraft implements Runnable {
 
 	public void toggleFullscreen() {
 		Display.toggleFullscreen();
-
 	}
 
 	private void resize(int var1, int var2) {

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 
+import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.HString;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 
@@ -16,6 +17,10 @@ public class ScuffedUtils {
     fos.write(vfile.getAllBytes());
     fos.close();
     return file;
+  }
+
+  public static void showZipFileChooser() {
+    EagRuntime.displayFileChooser("application/zip", ".zip");
   }
 
   public static String getFormattedTime(long ticks) {
@@ -32,5 +37,9 @@ public class ScuffedUtils {
 
   public static boolean isShiftKeyDown() {
     return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+  }
+
+  public static boolean isStringEmpty(String str) {
+    return str == null || str.isEmpty() || str.isBlank() || str.length() < 1;
   }
 }

@@ -42,7 +42,7 @@ public class GuiTexturePacks extends GuiScreen {
 	protected void actionPerformed(GuiButton var1) {
 		if(var1.enabled) {
 			if(var1.id == 5) {
-				EagRuntime.displayFileChooser("application/zip", ".zip");
+				ScuffedUtils.showZipFileChooser();
 			}
 
 			if(var1.id == 6) {
@@ -202,11 +202,7 @@ public class GuiTexturePacks extends GuiScreen {
 		super.updateScreen();
 		if (EagRuntime.fileChooserHasResult()) {
 			FileChooserResult result = EagRuntime.getFileChooserResult();
-			try {
-				TexturePack.addTexturePack(result, this.mc.loadingScreen);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			TexturePack.addTexturePack(this.mc.loadingScreen, result);
 		}
 		--this.field_6454_o;
 	}

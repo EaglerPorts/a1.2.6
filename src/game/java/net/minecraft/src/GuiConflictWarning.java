@@ -15,7 +15,7 @@ public class GuiConflictWarning extends GuiScreen {
 	protected void actionPerformed(GuiButton var1) {
 		if(var1.enabled) {
 			if(var1.id == 0) {
-				this.mc.displayGuiScreen(new GuiMainMenu());
+				this.mc.displayGuiScreen(this.mc.menu);
 			}
 
 		}

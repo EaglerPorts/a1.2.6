@@ -1,23 +1,14 @@
 package dev.colbster937.eaglercraft.rp;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.lwjgl.opengl.GL11;
 
-import dev.colbster937.eaglercraft.FormattingCodes;
-import dev.colbster937.eaglercraft.gui.GuiScreenInfo;
-import dev.colbster937.eaglercraft.gui.GuiScreenInfo.TextLine;
-
+import dev.colbster937.eaglercraft.storage.DirStorage;
 import net.lax1dude.eaglercraft.EagRuntime;
-import net.lax1dude.eaglercraft.EaglerInputStream;
 import net.lax1dude.eaglercraft.EaglercraftUUID;
-import net.lax1dude.eaglercraft.HString;
 import net.lax1dude.eaglercraft.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 import net.lax1dude.eaglercraft.opengl.ImageData;
@@ -25,29 +16,38 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.IProgressUpdate;
 
 public class TexturePack {
-  private static final VFile2 root = new VFile2(Minecraft.getMinecraftDir(), "texturePacks");
-  private static final VFile2 packs = new VFile2(root, "packs.txt");
+  public static DirStorage i;
 
   private static Minecraft mc = null;
   private static boolean mod = false;
-  private static TexturePack selectedPack = new TexturePack("Default");
+  private static TexturePack selectedPack = null;
   private static List<TexturePack> texturePacksCache = null;
 
   private final String name;
   private final VFile2 pack;
   private final VFile2 meta;
-  private final VFile2 files;
+  private final VFile2 _files;
 
   private String[] description = new String[] { "", "" };
   private ImageData icon = null;
   private int iconTexture = -1;
   private String id = "";
 
+  public static void init(Minecraft _mc) {
+    mc = _mc;
+    i = new DirStorage(_mc, "texturepacks");
+    selectedPack = new DefaultTexturePack();
+    if (!_mc.gameSettings.skin.equals("Default"))
+      selectedPack = new TexturePack(_mc.gameSettings.skin);
+    else
+      selectedPack = DefaultTexturePack.instance;
+  }
+
   protected TexturePack(String name, String[] description) {
     this.name = name;
-    this.pack = new VFile2(root, name);
+    this.pack = new VFile2(i.root, name);
     this.meta = new VFile2(pack, "pack.txt");
-    this.files = new VFile2(pack, "files.txt");
+    this._files = new VFile2(pack, "files.json");
     this.init(description);
   }
 
@@ -113,24 +113,9 @@ public class TexturePack {
   }
 
   public void delete(IProgressUpdate prog) {
-    updateProgress(prog, "Deleting Files");
-    String[] files = this.files.getAllLines();
-    for (int i = 0; i < files.length; i++) {
-      VFile2 file = new VFile2(pack, files[i]);
-      String path = file.getPath();
-      updateProgress(prog,
-          HString.format("Deleting '%s'", path.substring(pack.getPath().length() + 1, path.length())),
-          (int) Math.round(((i + 1) * 100.0) / files.length));
-      if (file.exists())
-        file.delete();
-    }
-    PrintWriter pw = new PrintWriter(packs.getOutputStream());
-    for (String file : packs.getAllLines())
-      if (!this.name.equals(file))
-        pw.println(file);
-    pw.close();
+    i.delete(prog, this.name);
 
-    this.files.delete();
+    this._files.delete();
     this.pack.delete();
 
     this.dispose();
@@ -158,14 +143,6 @@ public class TexturePack {
     return isDefaultPack(this);
   }
 
-  public static void init(Minecraft mc) {
-    TexturePack.mc = mc;
-    if (!mc.gameSettings.skin.equals("Default"))
-      selectedPack = new TexturePack(mc.gameSettings.skin);
-    else
-      selectedPack = DefaultTexturePack.instance;
-  }
-
   public static List<TexturePack> getTexturePacks() {
     boolean changed = mod;
     mod = false;
@@ -174,15 +151,11 @@ public class TexturePack {
       if (texturePacksCache != null)
         for (TexturePack pack : texturePacksCache)
           pack.dispose();
-      List<TexturePack> arr = new ArrayList<>();
-      arr.add(DefaultTexturePack.instance);
-      if (packs.exists()) {
-        for (String pack : packs.getAllLines()) {
-          if (!pack.isBlank() && !pack.isEmpty())
-            arr.add(new TexturePack(pack));
-        }
-      }
-      return texturePacksCache = arr;
+      List<TexturePack> lst = new ArrayList<>();
+      lst.add(DefaultTexturePack.instance);
+      for (String pack : i.getFilesInManifest())
+        lst.add(new TexturePack(pack));
+      return texturePacksCache = lst;
     } else {
       return texturePacksCache;
     }
@@ -223,87 +196,20 @@ public class TexturePack {
     return isSelectedPack(getTexturePacks().get(pack));
   }
 
-  public static void addTexturePack(String name, byte[] data, IProgressUpdate prog) throws IOException {
-    int fileCount = 0;
-    boolean valid = false;
-
-    ZipEntry entry;
-
-    try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data.clone()))) {
-      while ((entry = zis.getNextEntry()) != null) {
-        if (!entry.isDirectory())
-          fileCount++;
-        if ("pack.txt".equals(entry.getName()))
-          valid = true;
-      }
-    }
-
-    if (!valid) {
-      mc.displayGuiScreen(new GuiScreenInfo(mc.currentScreen, new TextLine(HString.format("'%s' is not a valid texture pack!", name), FormattingCodes.COLOR_ERROR)));
-      return;
-    }
-
-    List<TexturePack> existingPacks = getTexturePacks();
-
-    int d = name.lastIndexOf('.');
-    if (d > 0)
-      name = name.substring(0, d);
-
-    for (TexturePack pack : existingPacks)
-      while (name.equalsIgnoreCase(pack.name))
-        name += "-";
-
-    TexturePack pack = new TexturePack(name);
-    List<String> files = new ArrayList<>();
-
-    updateProgress(prog, "Extracting Files");
-
-    try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data))) {
-      int i = 0;
-      while ((entry = zis.getNextEntry()) != null) {
-        if (entry.isDirectory())
-          continue;
-        String file = entry.getName();
-        files.add(file);
-        updateProgress(prog,
-            HString.format("Extracting '%s'", file), (int) Math.round((++i * 100.0) / fileCount));
-        (new VFile2(pack.pack, file)).setAllBytes(EaglerInputStream.inputStreamToBytesNoClose(zis));
-      }
-    }
-
-    updateProgress(prog, "Updating Manifest");
-
-    PrintWriter pw = new PrintWriter(pack.files.getOutputStream());
-
-    for (String file : files)
-      pw.println(file);
-
-    pw.close();
-
-    pw = new PrintWriter(packs.getOutputStream());
-
-    if (packs.exists()) {
-      for (String file : packs.getAllLines())
-        pw.println(file);
-      packs.delete();
-    }
-
-    pw.println(name);
-
-    pw.close();
-
+  public static void addTexturePack(IProgressUpdate prog, String name, byte[] data) {
+    i._import(prog, name, data);
     mod = true;
   }
 
-  public static void addTexturePack(String name, byte[] data) throws IOException {
-    addTexturePack(name, data, null);
+  public static void addTexturePack(IProgressUpdate prog, FileChooserResult result) {
+    addTexturePack(prog, result.fileName, result.fileData);
   }
 
-  public static void addTexturePack(FileChooserResult result, IProgressUpdate prog) throws IOException {
-    addTexturePack(result.fileName, result.fileData, prog);
+  public static void addTexturePack(String name, byte[] data) {
+    addTexturePack(null, name, data);
   }
 
-  public static void addTexturePack(FileChooserResult result) throws IOException {
+  public static void addTexturePack(FileChooserResult result) {
     addTexturePack(result.fileName, result.fileData);
   }
 
@@ -316,19 +222,6 @@ public class TexturePack {
 
   public static boolean isDefaultPack(TexturePack pack) {
     return pack instanceof DefaultTexturePack;
-  }
-
-  private static void updateProgress(IProgressUpdate prog, String text, int perc) {
-    if (prog != null) {
-      if (text != null && !text.isEmpty() && !text.isBlank())
-        prog.displayLoadingString(text);
-      if (perc != -2)
-        prog.setLoadingProgress(perc);
-    }
-  }
-
-  private static void updateProgress(IProgressUpdate prog, String text) {
-    updateProgress(prog, text, -2);
   }
 
   private static String truncateDescLine(String var1) {

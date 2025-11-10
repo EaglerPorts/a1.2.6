@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import dev.colbster937.eaglercraft.gui.GuiScreenSelectManageWorld;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 import net.minecraft.client.Minecraft;
 
@@ -36,7 +37,7 @@ public class GuiSelectWorld extends GuiScreen {
 	}
 
 	public void initGui2() {
-		this.controlList.add(new GuiButton(5, this.width / 2 - 100, this.height / 6 + 120 + 12, "Delete world..."));
+		this.controlList.add(new GuiButton(5, this.width / 2 - 100, this.height / 6 + 120 + 12, "Manage world..."));
 		this.controlList.add(new GuiButton(6, this.width / 2 - 100, this.height / 6 + 168, "Cancel"));
 	}
 
@@ -45,7 +46,7 @@ public class GuiSelectWorld extends GuiScreen {
 			if(var1.id < 5) {
 				this.selectWorld(var1.id + 1);
 			} else if(var1.id == 5) {
-				this.mc.displayGuiScreen(new GuiDeleteWorld(this));
+				this.mc.displayGuiScreen(new GuiScreenSelectManageWorld(this));
 			} else if(var1.id == 6) {
 				this.mc.displayGuiScreen(this.parentScreen);
 			}

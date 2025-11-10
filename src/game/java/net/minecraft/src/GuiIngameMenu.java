@@ -8,8 +8,8 @@ public class GuiIngameMenu extends GuiScreen {
 		this.updateCounter2 = 0;
 		this.controlList.clear();
 		this.controlList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 48, "Save and quit to title"));
-		if(this.mc.isMultiplayerWorld()) {
-			((GuiButton)this.controlList.get(0)).displayString = "Disconnect";
+		if (this.mc.isMultiplayerWorld()) {
+			((GuiButton) this.controlList.get(0)).displayString = "Disconnect";
 		}
 
 		this.controlList.add(new GuiButton(4, this.width / 2 - 100, this.height / 4 + 24, "Back to game"));
@@ -17,21 +17,21 @@ public class GuiIngameMenu extends GuiScreen {
 	}
 
 	protected void actionPerformed(GuiButton var1) {
-		if(var1.id == 0) {
+		if (var1.id == 0) {
 			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
 		}
 
-		if(var1.id == 1) {
-			if(this.mc.isMultiplayerWorld()) {
+		if (var1.id == 1) {
+			if (this.mc.isMultiplayerWorld()) {
 				this.mc.theWorld.sendQuittingDisconnectingPacket();
 			}
 
-			this.mc.func_6261_a((World)null);
-			this.mc.displayGuiScreen(new GuiMainMenu());
+			this.mc.func_6261_a((World) null);
+			this.mc.displayGuiScreen(this.mc.menu);
 		}
 
-		if(var1.id == 4) {
-			this.mc.displayGuiScreen((GuiScreen)null);
+		if (var1.id == 4) {
+			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.func_6259_e();
 		}
 
@@ -45,10 +45,10 @@ public class GuiIngameMenu extends GuiScreen {
 	public void drawScreen(int var1, int var2, float var3) {
 		this.drawDefaultBackground();
 		boolean var4 = !this.mc.theWorld.func_650_a(this.updateCounter2++);
-		if(var4 || this.updateCounter < 20) {
-			float var5 = ((float)(this.updateCounter % 10) + var3) / 10.0F;
-			var5 = MathHelper.sin(var5 * (float)Math.PI * 2.0F) * 0.2F + 0.8F;
-			int var6 = (int)(255.0F * var5);
+		if (var4 || this.updateCounter < 20) {
+			float var5 = ((float) (this.updateCounter % 10) + var3) / 10.0F;
+			var5 = MathHelper.sin(var5 * (float) Math.PI * 2.0F) * 0.2F + 0.8F;
+			int var6 = (int) (255.0F * var5);
 			this.drawString(this.fontRenderer, "Saving level..", 8, this.height - 16, var6 << 16 | var6 << 8 | var6);
 		}
 
