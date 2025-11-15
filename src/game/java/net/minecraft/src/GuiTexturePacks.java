@@ -76,10 +76,18 @@ public class GuiTexturePacks extends GuiScreen {
 					var5 = this.width / 2 - 110;
 					int var6 = this.width / 2 + 110;
 					int var7 = (var2 - this.field_6459_i + this.field_6460_h - 2) / 36;
-					if(var1 >= var5 && var1 <= var6 && var7 >= 0) {
-						TexturePack pack = TexturePack.getTexturePacks().get(var7);
-						if (!TexturePack.isDefaultPack(pack) && !ScuffedUtils.isShiftKeyDown()) Minecraft.getMinecraft().displayGuiScreen(new GuiScreenTexturePackOptions(this, pack));
-						else TexturePack.setSelectedPack(pack);
+					if(var1 >= var5 && var1 <= var6 && var7 >= 0 && var7 < var4.size()) {
+						int a = 36 + var7 * 36 - this.field_6460_h;
+						int b = a - 2;
+						int c = a + 32 + 2;
+						if(var2 >= b && var2 <= c) {
+							TexturePack pack = var4.get(var7);
+							if (!TexturePack.isDefaultPack(pack) && !ScuffedUtils.isShiftKeyDown()) {
+								Minecraft.getMinecraft().displayGuiScreen(new GuiScreenTexturePackOptions(this, pack));
+							} else {
+								TexturePack.setSelectedPack(pack);
+							}
+						}
 					}
 
 					this.field_6455_n = var2;
