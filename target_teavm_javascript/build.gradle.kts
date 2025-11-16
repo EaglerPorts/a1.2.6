@@ -43,12 +43,13 @@ dependencies {
 
 val jsFolder = "javascript"
 val jsFileName = "classes.js"
+val debug = project.hasProperty("debug")
 
 teavm.js {
-	obfuscated = false
+	obfuscated = !debug
 	sourceMap = true
 	targetFileName = "../$jsFileName"
-	optimization = OptimizationLevel.AGGRESSIVE // Change to "AGGRESSIVE" for release
+	optimization = OptimizationLevel.valueOf(if (debug) "NONE" else "AGGRESSIVE")
 	outOfProcess = false
 	fastGlobalAnalysis = false
 	processMemory = 512
@@ -77,6 +78,7 @@ tasks.named<GenerateJavaScriptTask>("generateJavaScript") {
 					0,
 					j + 34
 			) + "\n" + file("$jsFolder/ES6ShimScript.txt").readText() + "\n" + dest.substring(j + 34)
+			dest = dest.replace("--0", "-0")
 			phile.writeText(dest)
 		} catch (ex: Exception) {
 			if (!teavm.js.obfuscated.get()) {
