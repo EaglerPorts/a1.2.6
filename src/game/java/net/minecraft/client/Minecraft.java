@@ -241,6 +241,7 @@ public class Minecraft implements Runnable {
 		GL11.glDisable(GL11.GL_FOG);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+		Display.update();
 	}
 
 	public void func_6274_a(int var1, int var2, int var3, int var4, int var5, int var6) {
