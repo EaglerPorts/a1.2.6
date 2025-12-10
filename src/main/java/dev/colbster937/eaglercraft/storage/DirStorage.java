@@ -12,12 +12,12 @@ import org.json.JSONArray;
 import dev.colbster937.eaglercraft.FormattingCodes;
 import dev.colbster937.eaglercraft.gui.GuiScreenInfo;
 import dev.colbster937.eaglercraft.gui.GuiScreenInfo.TextLine;
-import dev.colbster937.eaglercraft.utils.I18n;
 import dev.colbster937.eaglercraft.utils.JSONUtils;
 import dev.colbster937.eaglercraft.utils.ScuffedUtils;
 
 import net.lax1dude.eaglercraft.EagRuntime;
 import net.lax1dude.eaglercraft.EaglerInputStream;
+import net.lax1dude.eaglercraft.HString;
 import net.lax1dude.eaglercraft.internal.FileChooserResult;
 import net.lax1dude.eaglercraft.internal.vfs2.VFile2;
 
@@ -45,7 +45,7 @@ public class DirStorage {
       int count = 0;
       ZipEntry entry;
 
-      updateProgress(prog, I18n.format("storage.counting"));
+      updateProgress(prog, "Counting Files");
 
       try (ZipInputStream zis = new ZipInputStream(new EaglerInputStream(data.clone()))) {
         while ((entry = zis.getNextEntry()) != null) {
@@ -63,7 +63,7 @@ public class DirStorage {
         while (name.equalsIgnoreCase(file))
           name += "-";
 
-      updateProgress(prog, I18n.format("storage.extracting"));
+      updateProgress(prog, "Extracting Files");
 
       JSONArray arr = new JSONArray();
       VFile2 dir = new VFile2(root, name);
@@ -75,7 +75,7 @@ public class DirStorage {
             continue;
           String file = entry.getName();
           arr.put(file);
-          updateProgress(prog, I18n.format("storage.extracting.file", file), (int) Math.round((++i * 100.0) / count));
+          updateProgress(prog, HString.format("Extracting '%s'", file), (int) Math.round((++i * 100.0) / count));
           (new VFile2(dir, file)).setAllBytes(EaglerInputStream.inputStreamToBytesNoClose(zis));
         }
         zis.close();
@@ -84,7 +84,7 @@ public class DirStorage {
       addToManifest(prog, name);
     } catch (Throwable t) {
       delete(prog, name);
-      showErrorScreen(I18n.format("storage.error", I18n.format("storage.importing"), _name), t);
+      showErrorScreen(HString.format("An error occurred while importing '%s'", _name), t);
     }
   }
 
@@ -109,13 +109,13 @@ public class DirStorage {
       int subpath = _root.getPath().length();
       baos = new ByteArrayOutputStream();
       zos = new ZipOutputStream(baos);
-      updateProgress(prog, I18n.format("storage.exporting"));
+      updateProgress(prog, "Exporting Files");
       int i = 0;
       for (VFile2 file : files) {
         String path = file.getPath().substring(subpath);
         if (ScuffedUtils.isStringEmpty(path))
           continue;
-        updateProgress(prog, I18n.format("storage.exporting.file", path.substring(1)),
+        updateProgress(prog, HString.format("Zipping '%s'", path.substring(1), path.substring(1)),
             (int) Math.round((++i * 100.0) / files.size()));
         zos.putNextEntry(new ZipEntry(path));
         zos.write(file.getAllBytes());
@@ -125,7 +125,7 @@ public class DirStorage {
       zos.flush();
       EagRuntime.downloadFileWithName(name + ".zip", baos.toByteArray());
     } catch (Throwable t) {
-      showErrorScreen(I18n.format("storage.error", I18n.format("storage._exporting"), name), t);
+      showErrorScreen(HString.format("An error occurred while exporting '%s'", name), t);
     } finally {
       try {
         baos.close();
@@ -148,10 +148,10 @@ public class DirStorage {
     List<VFile2> files = _root.listFiles(true);
     int subpath = _root.getPath().length();
     int i = 0;
-    updateProgress(prog, I18n.format("storage.deleting"));
+    updateProgress(prog, "Deleting Files");
     for (VFile2 file : files) {
       if (file.getPath().startsWith(_root.getPath() + "/")) {
-        updateProgress(prog, I18n.format("storage.deleting.file", file.getPath().substring(subpath + 1)),
+        updateProgress(prog, HString.format("Deleting '%s'", file.getPath().substring(subpath + 1)),
             (int) Math.round((++i * 100.0) / files.size()));
         if (file.exists())
           file.delete();
@@ -194,7 +194,7 @@ public class DirStorage {
     if (prog != null) {
       if (!ScuffedUtils.isStringEmpty(title)) {
         if (prog instanceof LoadingScreenRenderer)
-          ((LoadingScreenRenderer) prog).printText(title);
+          ((LoadingScreenRenderer) prog).func_596_a(title);
         else
           prog.func_594_b(title);
       }
@@ -218,7 +218,7 @@ public class DirStorage {
   }
 
   private void updateManifest(IProgressUpdate prog) {
-    this.updateProgress(prog, I18n.format("storage.manifestUpdate"));
+    this.updateProgress(prog, "Updating Manifest");
     if (this.filesArr.length() > 0)
       files.setAllBytes(this.filesArr.toString().getBytes());
     else if (files.exists())
