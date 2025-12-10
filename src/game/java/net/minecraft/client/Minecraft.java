@@ -758,7 +758,6 @@ public class Minecraft implements Runnable {
 													this.displayGuiScreen(new GuiChat());
 												}
 
-
 												if(Keyboard.getEventKey() == this.gameSettings.keyBindCommand.keyCode) {
 													this.displayGuiScreen(new GuiChat());
 													if (this.currentScreen instanceof GuiChat) ((GuiChat) this.currentScreen).setMessage("/");
